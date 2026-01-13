@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let backendScore = 1;
     let integrationScore = 1;
 
-    let currentVolume = 8;
+    let currentVolume = 1;
     let currentComplexity = 1.1;
     let currentRisk = 1.1;
 
@@ -117,26 +117,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- HEURISTIC MAPPING ---
     function applyHeuristicMapping() {
-        // Volume
-        const volIndex = Math.max(frontendScore, backendScore);
-        const volValues = [1, 4, 8, 16, 24]; // Updated min volume to 1 for 0.1 MD
+        // Volume (Use Fibonacci)
+        // Frontend drives Volume directly. Backend drives it with -1 lag (1 step behind).
+        // e.g. Backend 5 -> Volume 4. Frontend 5 -> Volume 5.
+        let volIndex = Math.max(frontendScore, Math.max(1, backendScore - 1));
+
+        // Custom Rule: Integration impact on Volume
+        if (integrationScore === 4) volIndex = Math.max(volIndex, 2); // Zor -> Min S (2)
+        else if (integrationScore === 5) volIndex = Math.max(volIndex, 3); // Çok Zor -> Min M (3)
+
+        const volValues = [1, 2, 3, 5, 8];
         const newVolume = volValues[volIndex - 1];
 
         currentVolume = newVolume;
         selectButtonByValue(volumeGroup, newVolume);
 
-        // Complexity
-        const avgScore = Math.round((frontendScore + backendScore + integrationScore) / 3);
-        const compIndex = Math.max(1, Math.min(5, avgScore));
-        const compValues = [0.7, 0.9, 1.1, 1.5, 2.0];
+        // Complexity (Use Fibonacci)
+        // Start with average
+        let compIndex = Math.round((frontendScore + backendScore + integrationScore) / 3);
+
+        // Custom Rule: Frontend impact on Complexity
+        if (frontendScore === 4) compIndex = Math.max(compIndex, 3);
+        else if (frontendScore === 5) compIndex = Math.max(compIndex, 4);
+
+        // Custom Rule: Backend increases complexity more than volume (Direct impact)
+        // If Backend is 5, Complexity becomes at least 5.
+        // This ensures Complexity (5) > Volume (4) for a Backend task.
+        compIndex = Math.max(compIndex, backendScore);
+
+        // Custom Rule: Integration impact on Complexity
+        if (integrationScore === 4) compIndex = Math.max(compIndex, 3); // Zor -> Min Orta (3)
+        else if (integrationScore === 5) compIndex = Math.max(compIndex, 4); // Çok Zor -> Min Yüksek (4)
+
+        compIndex = Math.max(1, Math.min(5, compIndex));
+
+        const compValues = [1, 2, 3, 5, 8];
         const newComplexity = compValues[compIndex - 1];
 
         currentComplexity = newComplexity;
         selectButtonByValue(complexityGroup, newComplexity);
 
-        // Risk
-        const riskIndex = integrationScore;
-        const riskValues = [1.0, 1.1, 1.2, 1.5, 1.8];
+        // Risk (Use Fibonacci)
+        let riskIndex = integrationScore;
+
+        // Custom Rule: Frontend impact on Risk
+        if (frontendScore === 4) riskIndex = Math.max(riskIndex, 2);
+        else if (frontendScore === 5) riskIndex = Math.max(riskIndex, 3);
+
+        // Custom Rule: Backend impact on Risk
+        if (backendScore === 4) riskIndex = Math.max(riskIndex, 2);
+        else if (backendScore === 5) riskIndex = Math.max(riskIndex, 3);
+
+        const riskValues = [1, 2, 3, 5, 8];
         const newRisk = riskValues[riskIndex - 1];
 
         currentRisk = newRisk;
@@ -166,23 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        let weightedHours = currentVolume * currentComplexity * currentRisk;
-        let storyPoint = 0;
-        let fillPercentage = 0;
-
-        for (const threshold of spThresholds) {
-            if (weightedHours <= threshold.max) {
-                storyPoint = threshold.sp;
-                fillPercentage = threshold.rangePerc;
-                break;
-            }
-            if (threshold.max === Infinity) {
-                storyPoint = threshold.sp;
-                fillPercentage = threshold.rangePerc;
-            }
-        }
-
+        // Use the new weighted calculation method
+        const result = calculateStory(currentVolume, currentComplexity, currentRisk);
+        const storyPoint = result.sp || 13;
+        const weightedHours = result.estimatedHours || 0;
         const manDays = weightedHours / 7;
+
+        // Calculate simplified fill percentage based on SP for progress bar
+        let fillPercentage = 0;
+        if (storyPoint <= 1) fillPercentage = 10;
+        else if (storyPoint <= 2) fillPercentage = 30;
+        else if (storyPoint <= 3) fillPercentage = 50;
+        else if (storyPoint <= 5) fillPercentage = 70;
+        else if (storyPoint <= 8) fillPercentage = 85;
+        else fillPercentage = 100;
 
         spValue.textContent = storyPoint;
         mdValue.textContent = manDays.toFixed(1);
@@ -286,6 +315,43 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rangeFill) rangeFill.style.width = fillPercentage + '%';
         }, 100);
     }
+
+    function calculateStory(H, K, R) {
+        // Ağırlıklar
+        const W_H = 0.26;
+        const W_K = 0.34;
+        const W_R = 0.40;
+        const SCALE = 1.375;
+
+        // 1️⃣ Skor
+        const baseScore = (H * W_H) + (K * W_K) + (R * W_R);
+        const score = baseScore * SCALE;
+
+        // 2️⃣ SP + skor/saat aralıkları
+        const ranges = [
+            { sp: 1, sMin: 1.38, sMax: 2.00, hMin: 1, hMax: 4 },
+            { sp: 2, sMin: 2.01, sMax: 3.20, hMin: 4, hMax: 14 },
+            { sp: 3, sMin: 3.21, sMax: 4.60, hMin: 14, hMax: 28 },
+            { sp: 5, sMin: 4.61, sMax: 6.50, hMin: 28, hMax: 47 },
+            { sp: 8, sMin: 6.51, sMax: 8.80, hMin: 47, hMax: 63 },
+            { sp: 13, sMin: 8.81, sMax: 11.0, hMin: 63, hMax: 85 }
+        ];
+
+        const bucket = ranges.find(r => score <= r.sMax);
+
+        // 3️⃣ Lineer saat hesaplama
+        const ratio = (score - bucket.sMin) / (bucket.sMax - bucket.sMin);
+        let estimatedHours = bucket.hMin + ratio * (bucket.hMax - bucket.hMin);
+        estimatedHours = Math.max(1, estimatedHours);
+
+        return {
+            key: `${H}${K}${R}`,
+            score: Number(score.toFixed(2)),
+            sp: bucket.sp,
+            estimatedHours: Number(estimatedHours.toFixed(1))
+        };
+    }
+
 
     // Defaults
     selectButtonByValue(frontendGroup, 1);

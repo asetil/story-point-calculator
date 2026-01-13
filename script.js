@@ -217,6 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
         mdValue.textContent = manDays.toFixed(1);
         hoursValue.textContent = weightedHours.toFixed(1) + ' sa';
 
+        // Show Assign Button
+        document.getElementById('assignBtn').style.display = 'flex';
+
         // --- FUN MESSAGE LOGIC ---
         const funMessageEl = document.getElementById('funMessage');
         const funAvatarEl = document.getElementById('funAvatar');
@@ -352,6 +355,215 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+
+    // --- TASK ASSIGNMENT LOGIC ---
+
+    // 1. Team Data State
+    let teamMembers = JSON.parse(localStorage.getItem('AW_TEAM_MEMBERS')) || [];
+
+    const assignBtn = document.getElementById('assignBtn');
+    const assignModal = document.getElementById('assignModal');
+    const cancelAssignBtn = document.getElementById('cancelAssignBtn');
+    const confirmAssignBtn = document.getElementById('confirmAssignBtn');
+
+    // Dashboard Elements
+    const viewDashboardBtn = document.getElementById('viewDashboardBtn');
+    const dashboardModal = document.getElementById('dashboardModal');
+    const closeDashboardBtn = document.getElementById('closeDashboardBtn');
+    const resetTeamBtn = document.getElementById('resetTeamBtn');
+
+    // Add Member Elements
+    const addMemberBtn = document.getElementById('addMemberBtn');
+    const newMemberName = document.getElementById('newMemberName');
+
+    const taskTitleInput = document.getElementById('taskTitleInput');
+    const assigneeSelect = document.getElementById('assigneeSelect');
+    const manualSelectGroup = document.getElementById('manualSelectGroup');
+
+    // 2. Modal Handling
+    // Assignment Modal
+    assignBtn.addEventListener('click', () => {
+        if (teamMembers.length === 0) {
+            alert("Atama yapabilmek için önce 'Ekip Durumu' panelinden ekip üyesi eklemelisiniz!");
+            return;
+        }
+        assignModal.style.display = 'flex';
+        renderAssigneeOptions();
+    });
+
+    cancelAssignBtn.addEventListener('click', () => {
+        assignModal.style.display = 'none';
+    });
+
+    // Dashboard Modal Logic
+    if (viewDashboardBtn) {
+        viewDashboardBtn.addEventListener('click', () => {
+            dashboardModal.style.display = 'flex';
+            renderTeamDashboard();
+        });
+    }
+
+    if (closeDashboardBtn) {
+        closeDashboardBtn.addEventListener('click', () => {
+            dashboardModal.style.display = 'none';
+        });
+    }
+
+    // Add New Member Logic
+    if (addMemberBtn) {
+        addMemberBtn.addEventListener('click', () => {
+            const name = newMemberName.value.trim();
+            if (name) {
+                const newId = teamMembers.length > 0 ? Math.max(...teamMembers.map(m => m.id)) + 1 : 1;
+                teamMembers.push({
+                    id: newId,
+                    name: name,
+                    tasks: [],
+                    totalSP: 0,
+                    totalHours: 0
+                });
+                saveTeamData();
+                renderTeamDashboard();
+                renderAssigneeOptions();
+                newMemberName.value = '';
+            } else {
+                alert("Lütfen bir isim girin.");
+            }
+        });
+    }
+
+    // Toggle Manual Select
+    const radioButtons = document.querySelectorAll('input[name="assignMethod"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            manualSelectGroup.style.display = e.target.value === 'manual' ? 'block' : 'none';
+        });
+    });
+
+    function renderAssigneeOptions() {
+        assigneeSelect.innerHTML = '';
+        teamMembers.forEach(member => {
+            const option = document.createElement('option');
+            option.value = member.id;
+            option.textContent = `${member.name} (Yük: ${member.totalSP} SP)`;
+            assigneeSelect.appendChild(option);
+        });
+    }
+
+    // 3. Confirm Assignment
+    confirmAssignBtn.addEventListener('click', () => {
+        const title = taskTitleInput.value.trim() || "İsimsiz Görev";
+        const spText = spValue.textContent;
+        const sp = spText === '?' ? 0 : parseInt(spText); // Default 0 if not calculated
+        const hoursText = hoursValue.textContent;
+        const hours = hoursText === '?' ? 0 : parseFloat(hoursText);
+
+        if (sp === 0) {
+            alert("Lütfen önce bir tahmin hesaplayın!");
+            return;
+        }
+
+        const method = document.querySelector('input[name="assignMethod"]:checked').value;
+        let selectedMemberId;
+
+        if (method === 'auto') {
+            // Find member with lowest SP load
+            const sortedMembers = [...teamMembers].sort((a, b) => a.totalSP - b.totalSP);
+            selectedMemberId = sortedMembers[0].id;
+        } else {
+            selectedMemberId = parseInt(assigneeSelect.value);
+        }
+
+        assignTaskToMember(selectedMemberId, {
+            title: title,
+            sp: sp,
+            hours: hours,
+            date: new Date().toLocaleDateString('tr-TR')
+        });
+
+        // alert("Görev başarıyla atandı!");
+        assignModal.style.display = 'none';
+        taskTitleInput.value = ''; // Reset input
+    });
+
+    function assignTaskToMember(memberId, task) {
+        const member = teamMembers.find(m => m.id === memberId);
+        if (member) {
+            member.tasks.push(task);
+            member.totalSP += task.sp;
+            member.totalHours += task.hours;
+            saveTeamData();
+            renderTeamDashboard();
+        }
+    }
+
+    function saveTeamData() {
+        localStorage.setItem('AW_TEAM_MEMBERS', JSON.stringify(teamMembers));
+    }
+
+    // 4. Render Dashboard
+    function renderTeamDashboard() {
+        const grid = document.getElementById('teamGrid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+
+        // Calculate Min/Max for highlights
+        const spValues = teamMembers.map(m => m.totalSP);
+        const maxSP = spValues.length ? Math.max(...spValues) : 0;
+        const minSP = spValues.length ? Math.min(...spValues) : 0;
+        // Highlight logic: Only if we have multiple people, there is some load, and there is a difference
+        const shouldHighlight = teamMembers.length > 1 && maxSP > 0 && maxSP !== minSP;
+
+        teamMembers.forEach(member => {
+            const card = document.createElement('div');
+            card.classList.add('member-card');
+
+            if (shouldHighlight) {
+                if (member.totalSP === maxSP) card.classList.add('max-load');
+                else if (member.totalSP === minSP) card.classList.add('min-load');
+            }
+
+            let taskListHTML = '';
+            member.tasks.forEach(t => {
+                taskListHTML += `
+                    <li class="task-item">
+                        <span>${t.title}</span>
+                        <span class="sp-badge">${t.sp} SP</span>
+                    </li>
+                `;
+            });
+
+            if (member.tasks.length === 0) {
+                taskListHTML = '<li class="task-item" style="justify-content:center;">Henüz görev yok</li>';
+            }
+
+            card.innerHTML = `
+                <div class="member-header">
+                    <span class="member-name">${member.name}</span>
+                    <span class="member-load">${member.totalSP} SP (${member.totalHours.toFixed(1)} sa)</span>
+                </div>
+                <ul class="task-list">
+                    ${taskListHTML}
+                </ul>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Reset Team Data
+    if (resetTeamBtn) {
+        resetTeamBtn.addEventListener('click', () => {
+            if (confirm("Tüm atamaları ve ekip verilerini sıfırlamak istiyor musunuz?")) {
+                teamMembers = [];
+                saveTeamData();
+                renderTeamDashboard();
+            }
+        });
+    }
+
+    // Initialize Dashboard
+    renderTeamDashboard();
 
     // Defaults
     selectButtonByValue(frontendGroup, 1);

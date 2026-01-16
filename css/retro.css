@@ -1,0 +1,439 @@
+:root {
+    --bg-color: #f1f5f9;
+    /* Corkboard simplistic fallback */
+    --cork-pattern: radial-gradient(#e2e8f0 15%, transparent 16%) 0 0, radial-gradient(#e2e8f0 15%, transparent 16%) 8px 8px;
+    --text-main: #334155;
+    --font-ui: 'Outfit', sans-serif;
+    --font-note: 'Kalam', cursive;
+
+    --col-green: #dcfce7;
+    --col-green-dark: #15803d;
+    --note-green: #dcfce7;
+
+    --col-orange: #ffEdd5;
+    --col-orange-dark: #c2410c;
+    --note-orange: #ffEdd5;
+
+    --col-blue: #dbeafe;
+    --col-blue-dark: #1e40af;
+    --note-blue: #dbeafe;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-ui);
+    background-color: var(--bg-color);
+    background-image: var(--cork-pattern);
+    background-size: 16px 16px;
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+.home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: #475569;
+    background: white;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #cbd5e1;
+    transition: all 0.3s;
+    z-index: 100;
+    font-size: 1.5rem;
+}
+
+.home-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+header p {
+    color: #64748b;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    align-items: start;
+}
+
+.column {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 400px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.column-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+}
+
+.header-green {
+    color: var(--col-green-dark);
+    border-color: rgba(21, 128, 61, 0.2);
+}
+
+.header-orange {
+    color: var(--col-orange-dark);
+    border-color: rgba(194, 65, 12, 0.2);
+}
+
+.header-blue {
+    color: var(--col-blue-dark);
+    border-color: rgba(30, 64, 175, 0.2);
+}
+
+.add-note-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-note-container input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: var(--font-ui);
+}
+
+.add-note-container input:focus {
+    outline: none;
+    border-color: #64748b;
+}
+
+.btn-add {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.btn-add:hover {
+    transform: scale(1.05);
+}
+
+.btn-green {
+    background: var(--col-green-dark);
+}
+
+.btn-orange {
+    background: var(--col-orange-dark);
+}
+
+.btn-blue {
+    background: var(--col-blue-dark);
+}
+
+.notes-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.note-card {
+    padding: 15px;
+    border-radius: 2px;
+    /* Post-it style sharp/slightly rounded */
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-note);
+    font-size: 1.2rem;
+    position: relative;
+    transition: transform 0.2s;
+    cursor: grab;
+    word-wrap: break-word;
+    transform: rotate(-1deg);
+}
+
+.note-card:hover {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.note-card:nth-child(even) {
+    transform: rotate(1deg);
+}
+
+.note-card:nth-child(3n) {
+    transform: rotate(-1.5deg);
+}
+
+.note-well {
+    background-color: var(--note-green);
+    color: #064e3b;
+}
+
+.note-improve {
+    background-color: var(--note-orange);
+    color: #7c2d12;
+}
+
+.note-action {
+    background-color: var(--note-blue);
+    color: #1e3a8a;
+}
+
+.delete-note {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    opacity: 0.4;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: opacity 0.2s;
+}
+
+.note-card:hover .delete-note {
+    opacity: 1;
+}
+
+.btn-clear-all {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.btn-clear-all:hover {
+    background: #ef4444;
+    color: white;
+    transform: rotate(15deg);
+}
+
+.btn-share {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.btn-share:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    width: 95%;
+    max-width: 650px;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    transform: scale(0.95);
+    animation: scaleIn 0.3s 0.1s forwards cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+@keyframes scaleIn {
+    to {
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(to right, #f8fafc, #fff);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h2 {
+    font-size: 1.75rem;
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.btn-close-modal {
+    background: #f1f5f9;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+    background: #e2e8f0;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+.export-preview {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    background: #fff;
+    margin: 0;
+    font-family: var(--font-ui);
+    color: #334155;
+    line-height: 1.6;
+}
+
+/* Paper effect for preview content if needed, but clean white is good for "preview" */
+.export-preview::-webkit-scrollbar {
+    width: 8px;
+}
+
+.export-preview::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.export-preview::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.export-actions {
+    background: #f8fafc;
+    padding: 20px 32px;
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-action {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-ui);
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-copy {
+    background: white;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-copy:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.btn-word {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-word:hover {
+    background: #1d4ed8;
+    box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}

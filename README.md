@@ -1,31 +1,49 @@
-# 📊 Story Point Hesaplayıcı
+# 🚀 Agile Workspace
 
-Sprint planlamalarında işlerin karmaşıklığını, riskini ve eforunu daha tutarlı ve eğlenceli bir şekilde tahmin etmek için geliştirilmiş interaktif bir web aracı.
+Geliştiriciler için modern ve merkezi araç seti. Sprint planlamasından retrospektife, tüm süreçleri tek bir çatı altında yönetin.
 
-## 🚀 Özellikler
+## 📦 Araçlar
 
-*   **Detaylı Faktör Analizi:** Hacim (Volume), Karmaşıklık (Complexity) ve Risk faktörlerini ayrı ayrı değerlendirebilme.
-*   **Proje Bileşenleri:** Frontend, Backend ve Entegrasyon katmanları için özel kapsam belirleme (örn: "Liste ekranı", "CRUD işlemi").
-*   **Otomatik & Akıllı Hesaplama:** Seçilen kriterlere göre **Story Point**, **Adam/Gün** ve **Tahmini Efor (Saat)** hesabı.
-*   **Eğlenceli Sonuçlar:** İşin zorluğuna göre dinamik olarak değişen mizahi mesajlar ve avatarlar (😎, ☕, 🤔, 🔥).
-*   **Modern Arayüz:** Kullanıcı dostu ikonlar, responsive tasarım ve temiz bir görünüm.
+Bu proje dört ana modül içerir:
 
-## 🛠️ Kurulum ve Kullanım
+### 1. 📊 Story Point Hesaplayıcı
+Sprint planlamalarında işlerin karmaşıklığını, riskini ve eforunu tahmin etmek için kullanılır.
+*   **Özellikler:** Hacim, Karmaşıklık ve Risk analizi, Adam/Gün hesabı, otomatik atanacak kişi önerileri.
+*   **Kullanım:** `story-point.html` üzerinden veya ana sayfadaki karttan erişilebilir.
 
-Bu proje saf **HTML**, **CSS** ve **JavaScript** kullanılarak geliştirilmiştir. Herhangi bir sunucu kurulumuna veya derlemeye ihtiyaç duymaz.
+### 2. 📖 Incident Wiki
+Karşılaşılan hataların, incelemelerin ve çözümlerin kaydedildiği kişisel bilgi bankası.
+*   **Özellikler:** Hata kaydı oluşturma, çözüm notları ekleme, etiketleme ve arama yapma.
+*   **Kullanım:** `incident-wiki.html` üzerinden veya ana sayfadaki karttan erişilebilir.
 
-1.  Proje klasörünü bilgisayarınıza indirin.
-2.  `index.html` dosyasını tarayıcınızda (Chrome, Edge, Firefox vb.) açın.
-3.  **Hacim**, **Karmaşıklık** ve **Risk** değerlerini seçin veya **Proje Bileşenleri** kısmından detaylı seçim yapın.
-4.  **"Tahmini Hesapla"** butonuna basarak sonucu görüntüleyin.
+### 3. ⏱️ Daily Standup
+Günlük toplantılar için görsel zamanlayıcı. Odaklanmayı artırır ve süreyi verimli kullanmanızı sağlar.
+*   **Özellikler:** 15 dk varsayılan (60 dk max) geri sayım, son 10 saniyede görsel uyarı, modern arayüz.
+*   **Kullanım:** `daily-standup.html` üzerinden erişilebilir.
 
-## 🧮 Nasıl Çalışır?
+### 4. 📌 Retro Board
+Sprint retrospektifleri için dijital, yapışkan notlu pano.
+*   **Özellikler:** "İyi Gidenler", "Geliştirilmeli" ve "Aksiyonlar" sütunları, paylaşım & raporlama (Mail/Word formatında dışa aktarma).
+*   **Kullanım:** `retro-board.html` üzerinden erişilebilir.
 
-Uygulama arka planda şu mantığı izler:
-1.  **Girdi Analizi:** Frontend, Backend ve Entegrasyon seçimleriniz Hacim, Karmaşıklık ve Risk için baz puanlar oluşturur.
-2.  **Ağırlıklı Efor:** `Hacim x Karmaşıklık x Risk` formülüyle ham bir iş yükü (saat) hesaplanır.
-3.  **Story Point Eşlemesi:** Hesaplanan saat, Fibonacci dizisine (1, 2, 3, 5, 8, 13...) dayalı aralıklara oturtulur.
-4.  **Sonuç:** Puan, gün karşılığı ve motive edici (veya düşündürücü 😅) bir mesaj gösterilir.
+## 🏁 Kurulum ve Kullanım
+
+Proje herhangi bir sunucu kurulumu gerektirmez, doğrudan tarayıcıda çalışır.
+
+1.  Dosyaları indirin.
+2.  **`index.html`** dosyasını tarayıcınızda açın.
+3.  Açılan "Agile Workspace" ekranından istediğiniz araca tıklayın.
 
 ---
-*Keyifli Sprintler!*
+
+## 🏗️ Proje Yapısı
+
+*   `index.html` -> Ana Karşılama Ekranı (Hub)
+*   `story-point.html` -> Story Point Hesaplama Aracı
+*   `incident-wiki.html` -> Incident Wiki Aracı
+*   `daily-standup.html` -> Daily Standup Zamanlayıcı
+*   `retro-board.html` -> Retro Board Panosu
+*   `css/` & `js/` -> Stil ve script dosyaları
+
+---
+*Keyifli Kodlamalar!*

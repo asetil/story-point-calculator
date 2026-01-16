@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Wiki</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <a href="index.html"
+                style="position: absolute; top: 20px; left: 20px; text-decoration: none; color: #6366f1; background: white; padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; transition: all 0.3s; z-index: 100;"
+                onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
+                title="Ana Sayfaya Dön">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </a>
+            <div class="logo">
+                <ion-icon name="book-outline"></ion-icon>
+                <span>Incident Wiki</span>
+            </div>
+            <div class="header-actions">
+                <button id="btnOpenModal" class="btn-primary">
+                    <ion-icon name="add-circle-outline"></ion-icon> Yeni Kayıt Ekle
+                </button>
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="view-container">
+                <!-- Left: List Panel -->
+                <section class="panel list-pane">
+                    <div class="panel-header">
+                        <h2><ion-icon name="search-outline"></ion-icon> Bilgi Bankası</h2>
+                    </div>
+
+                    <div class="search-bar">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" id="searchInput" placeholder="Ara...">
+                    </div>
+
+                    <div class="results-list" id="resultsList">
+                        <!-- Dynamic Content -->
+                    </div>
+                </section>
+
+                <!-- Right: Detail Panel -->
+                <section class="panel detail-pane">
+                    <div id="detailContent" class="document-view">
+                        <div class="empty-detail">
+                            <ion-icon name="document-text-outline"></ion-icon>
+                            <p>Detaylarını görmek için bir kayıt seçin.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yeni Hata Kaydı</h2>
+                <button id="btnCloseModal" class="btn-icon">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <form id="incidentForm">
+                <div class="form-group">
+                    <label for="jiraId">Jira Linki</label>
+                    <input type="text" id="jiraId" placeholder="Örn: https://jira... veya PROJ-123" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Hata Başlığı</label>
+                    <input type="text" id="title" placeholder="Hatanın kısa tanımı..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">İnceleme Notları</label>
+                    <textarea id="notes" rows="8"
+                        placeholder="Sorunun incelemesi, sebebi ve çözümü buraya..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Etiketler</label>
+                    <input type="text" id="tags" placeholder="veritabanı, timeout, null-pointer...">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="btnCancel" class="btn-secondary">İptal</button>
+                    <button type="submit" class="btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

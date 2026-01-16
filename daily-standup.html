@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Standup Timer</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="css/daily.css">
+</head>
+
+<body>
+
+    <!-- Consistent Back Button -->
+    <a href="index.html" class="home-btn" title="Ana Sayfaya Dön">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+    </a>
+
+    <div class="app-container">
+
+        <header>
+            <h1>Daily Standup</h1>
+            <p>Odaklan, Konuş, Tamamla.</p>
+        </header>
+
+        <main>
+            <!-- Timer Display -->
+            <div class="timer-container">
+                <svg class="progress-ring" width="300" height="300">
+                    <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="12"
+                        fill="transparent" r="130" cx="150" cy="150" />
+                    <circle class="progress-ring__circle" stroke="#3b82f6" stroke-width="12" fill="transparent" r="130"
+                        cx="150" cy="150" />
+                </svg>
+                <div class="timer-text">
+                    <span id="timeDisplay">15:00</span>
+                    <span id="statusText">Hazır</span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button id="btnToggle" class="btn btn-primary">
+                    <ion-icon name="play-outline"></ion-icon> Başlat
+                </button>
+                <button id="btnReset" class="btn btn-secondary">
+                    <ion-icon name="refresh-outline"></ion-icon>
+                </button>
+            </div>
+
+            <!-- Settings / Config -->
+            <div class="settings">
+                <div class="input-group">
+                    <label>Süre (dk)</label>
+                    <input type="number" id="durationInput" value="15" min="1" max="30">
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="js/daily.js"></script>
+</body>
+
+</html>

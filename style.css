@@ -614,10 +614,105 @@ button#calculateBtn:hover {
 
 /* Load Highlights */
 .member-card.max-load {
-    background-color: #fee2e2; /* Light Red */
+    background-color: #fee2e2;
+    /* Light Red */
     border-color: #fca5a5;
 }
+
 .member-card.min-load {
-    background-color: #e0f2fe; /* Light Blue */
+    background-color: #e0f2fe;
+    /* Light Blue */
     border-color: #7dd3fc;
+}
+
+/* Back Button Base Styles */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: var(--primary);
+    background: white;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    z-index: 100;
+}
+
+.back-btn:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .selection-btn {
+        min-width: 45%;
+        padding: 8px 4px;
+        font-size: 0.8rem;
+    }
+
+    .selection-btn .btn-title {
+        font-size: 1rem;
+    }
+
+    .metric-block {
+        min-width: 100%;
+        /* Full width metrics on mobile */
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .add-member-section {
+        flex-direction: column;
+    }
+
+    .add-member-section input {
+        width: 100%;
+    }
+
+    .add-member-section button {
+        width: 100%;
+    }
+
+    /* Result section tweaks */
+    .fun-container-wide {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .fun-message-bubble {
+        text-align: center;
+    }
+
+    /* Back Button Positioning for Mobile */
+    .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+    }
 }

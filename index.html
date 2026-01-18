@@ -14,14 +14,16 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --primary: #3b82f6;
             --secondary: #8b5cf6;
             --accent: #06b6d4;
-            --hover-glow: rgba(59, 130, 246, 0.5);
+            --hover-glow: rgba(59, 130, 246, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -49,23 +51,25 @@
             position: absolute;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(248, 250, 252, 0) 70%);
             top: -200px;
             left: 50%;
             transform: translateX(-50%);
             z-index: -1;
             pointer-events: none;
+            mix-blend-mode: multiply;
         }
 
         .bg-glow-2 {
             position: absolute;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(248, 250, 252, 0) 70%);
             bottom: -100px;
             right: -100px;
             z-index: -1;
             pointer-events: none;
+            mix-blend-mode: multiply;
         }
 
         header {
@@ -77,7 +81,7 @@
         h1 {
             font-size: 3.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -105,8 +109,8 @@
 
         .card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
             border-radius: 24px;
             padding: 40px;
             width: 100%;
@@ -120,6 +124,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            box-shadow: var(--glass-shadow);
             animation: fadeInUp 0.8s ease-out backwards;
         }
 
@@ -145,8 +150,8 @@
 
         .card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4), 0 0 20px var(--hover-glow);
-            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.08), 0 0 20px var(--hover-glow);
+            border-color: var(--primary);
         }
 
         .card:hover::before {
@@ -156,25 +161,26 @@
         .icon-box {
             width: 80px;
             height: 80px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(59, 130, 246, 0.05);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 25px;
             font-size: 2.5rem;
-            color: var(--text-main);
+            color: var(--primary);
             transition: transform 0.4s ease, background 0.4s ease;
         }
 
         .card:hover .icon-box {
             transform: scale(1.1) rotate(5deg);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(59, 130, 246, 0.1);
             color: var(--primary);
         }
 
         .card:nth-child(2):hover .icon-box {
             color: var(--secondary);
+            background: rgba(139, 92, 246, 0.1);
         }
 
         .card h2 {
@@ -195,13 +201,14 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
             color: var(--text-muted);
             transition: all 0.3s ease;
+            background: #f8fafc;
         }
 
         .card:hover .card-arrow {

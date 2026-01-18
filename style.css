@@ -11,6 +11,7 @@
     --button-bg: #f1f5f9;
     --button-text: #475569;
     --font-family: 'Outfit', sans-serif;
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
 }
 
 * {

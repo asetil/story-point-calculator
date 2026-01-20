@@ -467,9 +467,31 @@ document.addEventListener('DOMContentLoaded', () => {
         let selectedMemberId;
 
         if (method === 'auto') {
-            // Find member with lowest SP load
-            const sortedMembers = [...teamMembers].sort((a, b) => a.totalSP - b.totalSP);
-            selectedMemberId = sortedMembers[0].id;
+            // 1. Get all unique TotalSP values, sorted ascending
+            const uniqueScores = [...new Set(teamMembers.map(m => m.totalSP))].sort((a, b) => a - b);
+
+            let candidates = [];
+
+            if (uniqueScores.length > 0) {
+                const lowestScore = uniqueScores[0];
+                // Find all members who have the lowest score
+                candidates = teamMembers.filter(m => m.totalSP === lowestScore);
+            }
+
+            // Randomly select one candidate from the lowest score group
+            if (candidates.length > 0) {
+                const randomIndex = Math.floor(Math.random() * candidates.length);
+                selectedMemberId = candidates[randomIndex].id;
+            } else {
+                // Fallback
+                selectedMemberId = teamMembers[0].id;
+            }
+        } else if (method === 'random') {
+            // Completely random selection among ALL members
+            if (teamMembers.length > 0) {
+                const randomIndex = Math.floor(Math.random() * teamMembers.length);
+                selectedMemberId = teamMembers[randomIndex].id;
+            }
         } else {
             selectedMemberId = parseInt(assigneeSelect.value);
         }
@@ -481,10 +503,60 @@ document.addEventListener('DOMContentLoaded', () => {
             date: new Date().toLocaleDateString('tr-TR')
         });
 
-        // alert("Görev başarıyla atandı!");
+        // Show Notification
+        const memberName = teamMembers.find(m => m.id === selectedMemberId)?.name || 'Bilinmeyen Kişi';
+        showNotification(`Görev <b>${memberName}</b> kişisine atandı.`);
+
         assignModal.style.display = 'none';
         taskTitleInput.value = ''; // Reset input
     });
+
+    function showNotification(message) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.innerHTML = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            font-size: 1rem;
+            animation: slideIn 0.3s ease-out;
+            pointer-events: none;
+        `;
+
+        // Add animation keyframes if not exists
+        if (!document.getElementById('notification-style')) {
+            const style = document.createElement('style');
+            style.id = 'notification-style';
+            style.innerHTML = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
 
     function assignTaskToMember(memberId, task) {
         const member = teamMembers.find(m => m.id === memberId);

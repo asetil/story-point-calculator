@@ -1,10 +1,15 @@
 :root {
-    --bg-color: #0f172a;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --primary: #3b82f6;
-    --secondary: #64748b;
-    --accent: #10b981;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --accent: #ec4899;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --input-bg: #f1f5f9;
+    --button-bg: #f1f5f9;
+    --button-text: #475569;
     --danger: #ef4444;
     --font-family: 'Outfit', sans-serif;
 }
@@ -23,7 +28,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-y: auto;
+    padding: 20px 0;
 }
 
 .home-btn {
@@ -39,7 +45,7 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     transition: all 0.3s;
     z-index: 100;
     font-size: 1.5rem;
@@ -49,11 +55,26 @@ body {
     transform: scale(1.1);
 }
 
+.layout-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
 .app-container {
     text-align: center;
     width: 100%;
-    max-width: 500px;
-    padding: 20px;
+    max-width: 450px;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 header {
@@ -64,7 +85,7 @@ header h1 {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 5px;
-    background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -81,7 +102,12 @@ header p {
     margin: 0 auto 40px;
 }
 
+.progress-ring__circle-bg {
+    stroke: var(--input-bg);
+}
+
 .progress-ring__circle {
+    stroke: var(--primary);
     transition: stroke-dashoffset 0.35s;
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
@@ -104,7 +130,8 @@ header p {
     font-size: 4rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    color: var(--text-main);
 }
 
 #statusText {
@@ -139,29 +166,29 @@ header p {
 .btn-primary {
     background: var(--primary);
     color: white;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover {
-    background: #2563eb;
+    background: var(--primary-hover);
     transform: translateY(-2px);
+    box-shadow: 0 8px 12px -3px rgba(99, 102, 241, 0.4);
 }
 
 .btn-primary.paused {
     background: #eab308;
-    /* Yellow for pause */
     box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--button-bg);
+    color: var(--button-text);
     padding: 15px;
-    /* Square/Icon button */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #e2e8f0;
 }
 
 .settings {
@@ -170,24 +197,25 @@ header p {
 }
 
 .input-group {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--input-bg);
     padding: 10px 20px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
 }
 
 .input-group label {
     color: var(--text-muted);
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .input-group input {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text-main);
     padding: 5px;
     border-radius: 5px;
     width: 60px;
@@ -225,5 +253,139 @@ header p {
 }
 
 .progress-ring__circle.danger {
-    stroke: var(--danger);
+    stroke: var(--danger) !important;
+}
+
+/* Checklist Styles */
+.checklist-container {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 600px;
+    height: 80vh;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.checklist-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.checklist-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.checklist-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.checklist-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.checklist-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+    position: sticky;
+    top: -30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    margin-top: -10px;
+    padding-top: 10px;
+    z-index: 10;
+}
+
+.checklist-section {
+    margin-bottom: 25px;
+}
+
+.checklist-section h3 {
+    font-size: 1.2rem;
+    color: var(--text-main);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: #fdfdfd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.check-item:hover {
+    background: #f8fafc;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.check-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    background-color: var(--input-bg);
+    border-radius: 6px;
+    margin-top: 2px;
+    margin-right: 15px;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.check-item:hover input[type="checkbox"] {
+    background-color: #e2e8f0;
+    border-color: var(--primary-hover);
+}
+
+.check-item input[type="checkbox"]::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em white;
+    background-color: transparent;
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.check-item input[type="checkbox"]:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.check-item input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+.check-item .check-text {
+    font-size: 1rem;
+    color: var(--text-main);
+    transition: color 0.2s ease;
+    line-height: 1.4;
+}
+
+.check-item input[type="checkbox"]:checked~.check-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.7;
 }

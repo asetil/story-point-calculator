@@ -22,48 +22,107 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
     </a>
 
-    <div class="app-container">
+    <div class="layout-wrapper">
+        <div class="app-container">
 
-        <header>
-            <h1>Daily Standup</h1>
-            <p>Odaklan, Konuş, Tamamla.</p>
-        </header>
+            <header>
+                <h1>Daily Standup</h1>
+                <p>Odaklan, Konuş, Tamamla.</p>
+            </header>
 
-        <main>
-            <!-- Timer Display -->
-            <div class="timer-container">
-                <svg class="progress-ring" width="300" height="300">
-                    <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="12"
-                        fill="transparent" r="130" cx="150" cy="150" />
-                    <circle class="progress-ring__circle" stroke="#3b82f6" stroke-width="12" fill="transparent" r="130"
-                        cx="150" cy="150" />
-                </svg>
-                <div class="timer-text">
-                    <span id="timeDisplay">15:00</span>
-                    <span id="statusText">Hazır</span>
+            <main>
+                <!-- Timer Display -->
+                <div class="timer-container">
+                    <svg class="progress-ring" width="300" height="300">
+                        <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="12"
+                            fill="transparent" r="130" cx="150" cy="150" />
+                        <circle class="progress-ring__circle" stroke="#3b82f6" stroke-width="12" fill="transparent"
+                            r="130" cx="150" cy="150" />
+                    </svg>
+                    <div class="timer-text">
+                        <span id="timeDisplay">15:00</span>
+                        <span id="statusText">Hazır</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Controls -->
-            <div class="controls">
-                <button id="btnToggle" class="btn btn-primary">
-                    <ion-icon name="play-outline"></ion-icon> Başlat
-                </button>
-                <button id="btnReset" class="btn btn-secondary">
-                    <ion-icon name="refresh-outline"></ion-icon>
-                </button>
-            </div>
-
-            <!-- Settings / Config -->
-            <div class="settings">
-                <div class="input-group">
-                    <label>Süre (dk)</label>
-                    <input type="number" id="durationInput" value="15" min="1" max="30">
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="btnToggle" class="btn btn-primary">
+                        <ion-icon name="play-outline"></ion-icon> Başlat
+                    </button>
+                    <button id="btnReset" class="btn btn-secondary">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                    </button>
                 </div>
+
+                <!-- Settings / Config -->
+                <div class="settings">
+                    <div class="input-group">
+                        <label>Süre (dk)</label>
+                        <input type="number" id="durationInput" value="15" min="1" max="30">
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+
+        <!-- Checklist Section -->
+        <div class="checklist-container">
+            <h2>Daily Scrum Checklist</h2>
+
+            <div class="checklist-section">
+                <h3>🎯 Amaç</h3>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Sprint Goal’e doğru ilerleyiş
+                        gözlemlendi mi?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Gerekirse Sprint Backlog
+                        üzerinde uyarlama yapıldı mı?</span></label>
             </div>
 
-        </main>
+            <div class="checklist-section">
+                <h3>👥 Katılım & Odak</h3>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Takım eksiksiz ve aktif bir
+                        şekilde katıldı mı?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Toplantı 30 dakikayı aşmadı
+                        mı?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Kişi-kişi değil, iş-iş
+                        üzerinden konuşuldu mu?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Ekran yansıtılarak iş
+                        maddeleri üzerinden ilerlenildi mi?</span></label>
+            </div>
 
+            <div class="checklist-section">
+                <h3>📋 Şeffaflık & Güncelleme</h3>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Sprint Backlog’taki statüler
+                        güncellendi mi?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Engeller ve bloklayan işler
+                        açıkça paylaşıldı mı?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Acil gelen işler Sprint
+                        Backlog’a eklendi ve sahiplenildi mi?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Burndown Chart gözden
+                        geçirildi mi?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Sprint içi kapasite planı
+                        gerekiyorsa güncellendi mi?</span></label>
+            </div>
+
+            <div class="checklist-section">
+                <h3>🧠 Disiplin & Akış</h3>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Detaylı teknik tartışmalar
+                        Daily Scrum sonrasına bırakıldı mı?</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Gün için uygulanabilir net
+                        bir plan oluştu mu?</span></label>
+            </div>
+
+            <div class="checklist-section">
+                <h3>📌 Çıktı</h3>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Güncellenmiş Sprint
+                        Backlog</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Gün için uygulanabilir
+                        plan</span></label>
+                <label class="check-item"><input type="checkbox"> <span class="check-text">Görünür hale getirilmiş
+                        engeller</span></label>
+            </div>
+        </div>
     </div>
 
     <script src="js/daily.js"></script>

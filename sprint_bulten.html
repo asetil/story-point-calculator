@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint Bülteni</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.1.2/chartjs-plugin-annotation.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+      --primary-gradient: linear-gradient(135deg, #66b7ea 0%, #32b663 100%);
+      --secondary-gradient: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      --card-bg: #ffffff;
+      --text-color: #2d3748;
+      --text-muted: #718096;
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+      background-size: 20px 20px;
+      margin: 0;
+      padding: 40px 20px;
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Controls */
+    .controls-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 30px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border-left: 5px solid #667eea;
+    }
+
+    input {
+      padding: 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: transform 0.1s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+      color: #2d3748;
+      box-shadow: none;
+    }
+
+    /* Report Container */
+    .report-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: fadeIn 0.5s ease-out;
+      max-width: 1100px;
+      /* Ensure fixed width for PDF consistency */
+      margin: 0 auto;
+    }
+
+    @media print {
+      .report-card {
+        opacity: 1 !important;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    .report-header {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .report-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .sprint-badge {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    /* Section Styling */
+    .section {
+      padding: 30px;
+      border-bottom: 1px solid #edf2f7;
+      page-break-inside: avoid;
+      /* PDF optimization */
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      border-left: 4px solid #764ba2;
+      padding-left: 10px;
+    }
+
+    /* Grid System */
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Data Cards */
+    .data-card {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-card:hover {
+      background: #fff;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .data-label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* PDF Container - Hidden on Screen */
+    #pdf-container {
+      display: none;
+      /* Initially hidden */
+      width: 800px;
+      /* Fixed width for A4 consistency */
+      background: white;
+      padding: 40px;
+      color: #000;
+      font-family: 'Segoe UI', sans-serif;
+      /* Standard font for PDF */
+      border: 1px solid #ccc;
+      /* Just for debugging if shown */
+    }
+
+    /* Print Specific Styles */
+    .print-header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .print-logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .print-meta {
+      font-size: 14px;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .print-section {
+      margin-bottom: 30px;
+      page-break-inside: avoid;
+    }
+
+    .print-title {
+      font-size: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .print-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .print-item {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .print-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .print-value {
+      font-size: 14px;
+      font-weight: bold;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .print-table td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .print-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .print-table td:last-child {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .data-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .highlight-card {
+      background: #ebf8ff;
+      /* Light blue tint */
+      border: 1px solid #bee3f8;
+    }
+
+    .highlight-card .data-value {
+      color: #2b6cb0;
+    }
+
+    .success-card {
+      background: #f0fff4;
+      border: 1px solid #c6f6d5;
+    }
+
+    .success-card .data-value {
+      color: #2f855a;
+    }
+
+    /* Breakdown Table */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .styled-table td {
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 15px;
+    }
+
+    .styled-table td:last-child {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    /* Chart */
+    .chart-wrapper {
+      position: relative;
+      height: 500px;
+      /* Increased height */
+      margin-top: 20px;
+    }
+
+    /* Task Table */
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 13px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-table th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 12px;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .task-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .task-table img {
+      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+    }
+
+    /* Highlight Emerged */
+    .emerged-row {
+      background-color: #fff7ed !important;
+      /* Light Orange/Yellow */
+      border-left: 4px solid #f97316;
+    }
+
+    .emerged-row td {
+      color: #c2410c;
+    }
+
+    /* PDF Specifics for Table */
+    #pdf-task-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      margin-top: 20px;
+    }
+
+    #pdf-task-table th {
+      background: #eee;
+      padding: 5px;
+      border: 1px solid #000;
+    }
+
+    #pdf-task-table td {
+      padding: 5px;
+      border: 1px solid #000;
+    }
+
+    #pdf-task-table .emerged-row {
+      background-color: #ffe4b5 !important;
+    }
+
+    /* PDF Container - Hidden on Screen */
+    #pdf-container {
+      display: none;
+      /* Initially hidden */
+      width: 800px;
+      /* Fixed width for A4 consistency */
+      background: white;
+      padding: 40px;
+      color: #000;
+      font-family: 'Segoe UI', sans-serif;
+      /* Standard font for PDF */
+      border: 1px solid #ccc;
+      /* Just for debugging if shown */
+    }
+
+    /* Print Specific Styles */
+    .print-header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .print-logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .print-meta {
+      font-size: 14px;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .print-section {
+      margin-bottom: 30px;
+      page-break-inside: avoid;
+    }
+
+    .print-title {
+      font-size: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      text-transform: uppercase;
+      page-break-after: avoid;
+    }
+
+    .print-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .print-item {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .print-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .print-value {
+      font-size: 14px;
+      font-weight: bold;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .print-table td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .print-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .print-table td:last-child {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .data-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .highlight-card {
+      background: #ebf8ff;
+      /* Light blue tint */
+      border: 1px solid #bee3f8;
+    }
+
+    .highlight-card .data-value {
+      color: #2b6cb0;
+    }
+
+    .success-card {
+      background: #f0fff4;
+      border: 1px solid #c6f6d5;
+    }
+
+    .success-card .data-value {
+      color: #2f855a;
+    }
+
+    /* Breakdown Table */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .styled-table td {
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 15px;
+    }
+
+    .styled-table td:last-child {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .styled-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Layout ve Sidebar Stilleri */
+    .layout-wrapper {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 0 20px;
+    }
+
+    .sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 40px);
+    }
+
+    .sidebar-header {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #edf2f7;
+      padding-bottom: 10px;
+    }
+
+    .sidebar-sprint-btn {
+      padding: 10px 12px;
+      text-align: left;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-color);
+      transition: all 0.2s;
+      margin-bottom: 5px;
+      display: block;
+      width: 100%;
+    }
+
+    .sidebar-sprint-btn:hover {
+      background: #ebf4ff;
+      border-color: #667eea;
+    }
+
+    .sidebar-sprint-btn.active {
+      background: #232323;
+      color: white;
+      border: none;
+    }
+
+    .sidebar-sprints-list {
+      overflow-y: auto;
+      flex-grow: 1;
+      padding-right: 5px;
+    }
+
+    /* Scrollbar for sidebar list */
+    .sidebar-sprints-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar-sprints-list::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .sidebar-sprints-list::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 4px;
+    }
+
+    /* Auth Overlay & Logout */
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .auth-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      background: #e53e3e;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #c53030;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+      }
+
+      .sidebar,
+      .logout-btn,
+      #btnDownload,
+      .controls-card,
+      #authModal {
+        display: none !important;
+      }
+
+      .layout-wrapper {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        max-width: none;
+      }
+
+      .main-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .report-card {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+      }
+
+      .data-card,
+      .section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .task-table {
+        page-break-inside: auto;
+      }
+
+      .task-table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+      /* Ensure background colors and gradients print perfectly */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #pdf-container {
+        display: none !important;
+      }
+    }
+
+    /* PDF Export Override to fix html2canvas washout and width issues */
+    .pdf-export-mode {
+      max-width: 1200px !important;
+      background: #ffffff !important;
+      box-shadow: none !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 10px !important;
+      opacity: 1 !important;
+    }
+
+    .pdf-export-mode * {
+      box-shadow: none !important;
+      opacity: 1 !important;
+    }
+
+    .pdf-export-mode .task-table {
+      width: 100% !important;
+      table-layout: fixed !important;
+      word-wrap: break-word !important;
+      font-size: 11px !important;
+      /* Scale text down */
+    }
+
+    .pdf-export-mode .task-table th,
+    .pdf-export-mode .task-table td {
+      white-space: normal !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      padding: 6px !important;
+    }
+
+    .pdf-export-mode .task-table th:nth-child(2),
+    .pdf-export-mode .task-table td:nth-child(2) {
+      width: 40% !important;
+      /* Give summary more space */
+    }
+
+    /* Keep pie chart from overflowing in vertical layout */
+    .pdf-export-mode canvas#assigneeChart {
+      max-width: 500px !important;
+      margin: 0 auto !important;
+    }
+
+    /* PDF export: burndown chart yatayda A4'e sığsın */
+    .pdf-export-mode .chart-wrapper {
+      width: 100% !important;
+      overflow: hidden !important;
+    }
+
+    .pdf-export-mode .chart-wrapper canvas {
+      max-width: 100% !important;
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    /* PDF export: gizlenecek bölümler */
+    .pdf-export-mode .filter-bar,
+    .pdf-export-mode #sprint-task-section,
+    .pdf-export-mode #assignee-section {
+      display: none !important;
+    }
+
+    /* PDF Fullscreen Loader Plugin */
+    #pdf-loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FULLSCREEN PDF EXPORT SPINNER -->
+  <div id="pdf-loading-overlay" style="display:none;">
+    <div class="loader" style="width: 50px; height: 50px; border-width: 4px;"></div>
+    <h2 style="color: #4a5568; margin-top: 20px; font-weight: 600;">PDF Hazırlanıyor...</h2>
+    <p style="color: #718096; font-size: 14px;">Lütfen bekleyin, yüksek çözünürlüklü rapor oluşturuluyor.</p>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authModal" style="display:none;">
+    <div class="auth-box">
+      <h3 style="margin-top:0; color:#2d3748; margin-bottom: 20px;">Jira Giriş Bilgileri</h3>
+      <p>Eğer giriş başarısız yanıtını üst üste görürseniz JİRA'nın kendi ekranından tekrar giriş yapmayı
+        deneyin. Jira bazen captcha girmenizi bekliyor.</p>
+      <input type="text" id="authBaseUrl" class="auth-input" placeholder="Jira URL (örn: https://jira.bulut.ai)"
+        value="https://jira.bulut.ai">
+      <input type="text" id="authUsername" class="auth-input" placeholder="Kullanıcı Adı">
+      <input type="password" id="authPassword" class="auth-input" placeholder="Şifreniz">
+      <button onclick="performLogin()"
+        style="width:100%; background:var(--primary-gradient); color:white; border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
+        Giriş Yap
+      </button>
+      <div id="authError" style="color:#e53e3e; font-size:12px; margin-top:10px; text-align:center; display:none;">
+        Lütfen tüm alanları doldurun.</div>
+    </div>
+  </div>
+
+  <div class="layout-wrapper">
+    <!-- SOL YAN MENÜ (SIDEBAR) -->
+    <div class="sidebar" data-html2canvas-ignore="true">
+      <div class="sidebar-header">
+        <h3 style="margin:0 0 5px 0; color:#4a5568; font-size:16px;">Sprint Seçimi</h3>
+        <span style="font-size:12px; color:#718096">Listelemek için Board ID</span>
+      </div>
+
+      <input id="boardId" value="133" placeholder="Board ID"
+        style="width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 10px; border-radius:6px; border:1px solid #cbd5e0;">
+
+      <button onclick="fetchSprints()" style="width: 100%; margin-bottom: 15px; padding: 10px;">
+        Sprintleri Getir
+      </button>
+
+      <div class="sidebar-sprints-list" id="sprint-list-container">
+        <div style="text-align:center; color:#a0aec0; font-size:13px; padding:20px 0;">Önce sprintleri getirin...</div>
+      </div>
+
+      <!-- Gizli Sprint ID (Eski mantık bozulmasın diye butona basıldığında dolacak) -->
+      <input type="hidden" id="sprintId" value="">
+    </div>
+
+    <!-- ANA İÇERİK (MAIN CONTAINER) -->
+    <div class="main-container" style="flex: 1; min-width: 0;">
+
+      <div class="controls-card" data-html2canvas-ignore="true"
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding: 15px 25px;">
+        <a href="index.html"
+          style="text-decoration: none; padding: 8px 15px; border-radius: 6px; font-weight: 600; font-size: 14px; margin-right: 15px; background: #e2e8f0; color: #4a5568; transition: background 0.2s;">
+          ← Ana Menü
+        </a>
+        <div style="flex-grow:1">
+          <h3 style="margin:0; color:#4a5568">EKAP - Sprint Bülteni</h3>
+        </div>
+        <button id="btnDownload" onclick="downloadPDF()" class="btn-secondary" style="display:none; margin-left:10px;">
+          📄 PDF İndir
+        </button>
+        <button class="logout-btn" id="logoutBtn" style="display:none; margin-left:10px;" onclick="performLogout()">
+          Çıkış Yap
+        </button>
+      </div>
+
+      <!-- MAIN SCREEN UI -->
+      <div id="result"></div>
+    </div>
+  </div>
+
+
+  <script>
+    let currentData = null; // Store data globally for PDF generation
+
+    // --- AUTHENTICATION LOGIC ---
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuth();
+    });
+
+    function checkAuth() {
+      const savedUser = localStorage.getItem('jiraUsername');
+      const savedPass = localStorage.getItem('jiraPassword');
+      const savedUrl = localStorage.getItem('jiraBaseUrl');
+
+      if (!savedUser || !savedPass || !savedUrl) {
+        document.getElementById('authModal').style.display = 'flex';
+        document.getElementById('logoutBtn').style.display = 'none';
+      } else {
+        document.getElementById('authModal').style.display = 'none';
+        document.getElementById('logoutBtn').style.display = 'block';
+      }
+    }
+
+    async function performLogin() {
+      const url = document.getElementById('authBaseUrl').value.trim();
+      const user = document.getElementById('authUsername').value.trim();
+      const pass = document.getElementById('authPassword').value.trim();
+      const errorDiv = document.getElementById('authError');
+
+      if (!url || !user || !pass) {
+        errorDiv.innerText = 'Lütfen tüm alanları doldurun.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/test-auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ baseUrl: url, username: user, password: pass })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Giriş başarısız.");
+        }
+
+        // Başarılı ise basit şifreleme (Base64) ile kaydet
+        localStorage.setItem('jiraBaseUrl', btoa(url));
+        localStorage.setItem('jiraUsername', btoa(user));
+        localStorage.setItem('jiraPassword', btoa(pass));
+
+        errorDiv.style.display = 'none';
+        checkAuth();
+      } catch (err) {
+        errorDiv.innerText = err.message;
+        errorDiv.style.display = 'block';
+      }
+    }
+
+    function performLogout() {
+      localStorage.removeItem('jiraBaseUrl');
+      localStorage.removeItem('jiraUsername');
+      localStorage.removeItem('jiraPassword');
+      currentData = null;
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('sprint-list-container').innerHTML = '<div style="text-align:center; color:#a0aec0; font-size:13px; padding:20px 0;">Önce sprintleri getirin...</div>';
+      document.getElementById('authUsername').value = '';
+      document.getElementById('authPassword').value = '';
+      checkAuth();
+    }
+
+    function getAuthData() {
+      try {
+        let savedUrl = localStorage.getItem('jiraBaseUrl');
+        let savedUser = localStorage.getItem('jiraUsername');
+        let savedPass = localStorage.getItem('jiraPassword');
+
+        return {
+          baseUrl: savedUrl ? atob(savedUrl) : null,
+          username: savedUser ? atob(savedUser) : null,
+          password: savedPass ? atob(savedPass) : null
+        };
+      } catch (e) {
+        // Obfuscation broken (e.g user manually edited localStorage)
+        performLogout();
+        return { baseUrl: null, username: null, password: null };
+      }
+    }
+    // ----------------------------
+
+    async function fetchSprints() {
+      const auth = getAuthData();
+      if (!auth.username || !auth.password) {
+        checkAuth();
+        return;
+      }
+
+      const boardId = document.getElementById("boardId").value.trim();
+      const listContainer = document.getElementById("sprint-list-container");
+
+      if (!boardId) return;
+
+      listContainer.innerHTML = '<div style="text-align:center; padding:20px 0;"><div class="loader" style="width:20px;height:20px;border-width:2px;margin:0 auto"></div></div>';
+
+      try {
+        const response = await fetch("http://localhost:3000/sprints", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ baseUrl: auth.baseUrl, username: auth.username, password: auth.password, boardId })
+        });
+        const sprints = await response.json();
+
+        if (!response.ok) throw new Error(sprints.error || "Bilinmeyen Hata");
+
+        if (sprints.length === 0) {
+          listContainer.innerHTML = '<div style="text-align:center; color:#a0aec0; font-size:13px; padding:20px 0;">Sprint bulunamadı.</div>';
+          return;
+        }
+
+        listContainer.innerHTML = sprints.map(s => {
+          let stateColor = s.state === 'active' ? '#48bb78' : (s.state === 'closed' ? '#718096' : '#ecc94b');
+          return `
+          <button class="sidebar-sprint-btn" onclick="selectSprint(${s.id}, this)">
+            <div style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap" title="${s.name}">${s.name}</div>
+            <div style="font-size:11px; color:${stateColor}; margin-top:3px; text-transform:uppercase; letter-spacing:0.5px">● ${s.state}</div>
+          </button>
+        `}).join("");
+      } catch (err) {
+        listContainer.innerHTML = `<div style="color:#e53e3e; font-size:12px; padding:10px; text-align:center;">${err.message}</div>`;
+      }
+    }
+
+    function selectSprint(sprintId, btnElement) {
+      document.querySelectorAll('.sidebar-sprint-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+
+      document.getElementById("sprintId").value = sprintId;
+      getSprintReport();
+    }
+
+    async function getSprintReport() {
+      const auth = getAuthData();
+      if (!auth.username || !auth.password) {
+        checkAuth();
+        return;
+      }
+
+      const sprintId = document.getElementById("sprintId").value.trim();
+      const boardId = document.getElementById("boardId").value.trim();
+      const resultDiv = document.getElementById("result");
+      const btnDownload = document.getElementById("btnDownload");
+
+      if (!sprintId) return;
+
+      btnDownload.style.display = "none"; // Hide previous download button
+
+      resultDiv.innerHTML = `
+        <div style="text-align:center; padding:50px; color:#718096;">
+            <div class="loader"></div>
+            <h3>Veriler Analiz Ediliyor...</h3>
+        </div>
+    `;
+
+      try {
+        const response = await fetch("http://localhost:3000/sprint-report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ baseUrl: auth.baseUrl, username: auth.username, password: auth.password, sprintId, boardId }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        currentData = data; // Store for PDF
+        console.log("OSM2", data.issueList.map(a => a.key + " - " + a.sp));
+        await renderReport(data);
+        btnDownload.style.display = "inline-block"; // Show download button
+      } catch (error) {
+        resultDiv.innerHTML = `<div style="background:#fff5f5; color:#c53030; padding:20px; border-radius:8px; text-align:center">Hata: ${error.message}</div>`;
+      }
+    }
+
+    function downloadPDF() {
+      if (!currentData) return;
+
+      const element = document.querySelector('.report-card');
+      const overlay = document.getElementById('pdf-loading-overlay');
+      if (!element || !overlay) return;
+
+      // Show full-screen blocking UI
+      overlay.style.display = 'flex';
+
+      // HTML2Canvas struggles with box-shadows blending into the background
+      // and width constraints. We add a special class during export.
+      element.classList.add('pdf-export-mode');
+
+      const opt = {
+        margin: [1, 1, 1, 1], // top, left, bottom, right in millimeters
+        filename: `Sprint_Report_${currentData.sprintAdi || 'Rapor'}.pdf`,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        element.classList.remove('pdf-export-mode');
+        overlay.style.display = 'none'; // Hide overlay
+      }).catch(err => {
+        console.error("PDF Export Error:", err);
+        element.classList.remove('pdf-export-mode');
+        overlay.style.display = 'none'; // Hide overlay
+        alert("PDF oluşturulurken bir hata oluştu.");
+      });
+    }
+
+    function renderReport(data) {
+      const auth = getAuthData();
+      const baseUrl = auth.baseUrl ? auth.baseUrl.replace(/\/$/, '') : 'https://jira.bulut.ai';
+
+      // Construct Table Row Helper
+      const rows = data.issueList.map(issue => `
+        <tr class="${issue.isEmerged ? 'emerged-row' : ''}">
+            <td><a href="${baseUrl}/browse/${issue.key}" target="_blank" style="color:#3182ce; text-decoration:none; font-weight:bold">${issue.key}</a></td>
+            <td>${issue.summary}</td>
+            <td><img src="${issue.issuetypeIcon}" alt=""> ${issue.issuetype}</td>
+            <td><img src="${issue.priorityIcon}" alt=""> ${issue.priority}</td>
+            <td><span style="padding:2px 6px; border-radius:4px; font-size:11px; background:#edf2f7; color:#4a5568">${issue.status}</span></td>
+            <td style="text-align:center; font-weight:bold">${issue.sp}</td>
+            <td>${issue.assignee}</td>
+        </tr>
+    `).join('');
+
+      const html = `
+        <div class="report-card">
+            <div class="report-header">
+                <h1>${data.developmentTeam}</h1>
+                <div class="sprint-badge">${data.sprintAdi}</div>
+            </div>
+                <!-- EKİP BİLGİLERİ -->
+                <div class="section">
+                    <div class="section-title">Ekip Bilgileri</div>
+                    <div class="grid grid-3">
+                        <div class="data-card">
+                            <span class="data-label">Product Owner</span>
+                            <span class="data-value">${data.productOwner || '---'}</span>
+                        </div>
+                        <div class="data-card">
+                            <span class="data-label">Scrum Master</span>
+                            <span class="data-value">${data.scrumMaster || '---'}</span>
+                        </div>
+                        <div class="data-card">
+                            <span class="data-label">Development Team</span>
+                            <span class="data-value">${data.developmentTeam}</span>
+                        </div>
+                    </div>
+                </div><!-- DETAILS -->
+            <div class="section">
+                <div class="section-title">Sprint Detayları</div>
+                <div class="grid grid-2" style="margin-bottom:20px">
+                    <div class="data-card highlight-card" style="grid-column: 1 / -1;">
+                        <span class="data-label">Sprint Goal</span>
+                        <div class="data-value" style="font-size:1.2rem">${data.sprintGoal}</div>
+                    </div>
+                </div>
+                <div class="grid grid-4">
+                    <div class="data-card"><span class="data-label">Başlangıç</span><div class="data-value" style="font-size:15px">${data.sprintBaslangic}</div></div>
+                    <div class="data-card"><span class="data-label">Bitiş</span><div class="data-value" style="font-size:15px">${data.sprintBitis}</div></div>
+                    <div class="data-card"><span class="data-label">Süre</span><div class="data-value">2 Hafta</div></div>
+                    <div class="data-card"><span class="data-label">Review</span><div class="data-value" style="font-size:15px">${data.sprintReview}</div></div>
+                </div>
+            </div>
+            <!-- METRICS -->
+            <div class="section">
+                <div class="section-title">Metrikler ve Analiz</div>
+                <div class="grid grid-3">
+                    <div class="data-card" style="background:#fff">
+                        <h4 style="margin-top:0; color:#4a5568">Genel Özet</h4>
+                        <table class="styled-table">
+                            <tr><td>Committed</td><td>${data.committed} SP</td></tr>
+                            <tr><td>Emerged</td><td>${data.emerged} SP</td></tr>
+                            <tr><td>Undone</td><td style="color:#e53e3e">${data.undone} SP</td></tr>
+                            <tr>
+                                <td>Removed</td>
+                                <td style="color:#d69e2e">${data.removed || 0} SP</td>
+                            </tr>
+                            <tr style="font-weight:bold; color:#2f855a; background:#f0fff4"><td>Done (Velocity)</td><td>${data.velocity} SP</td></tr>
+                        </table>
+                    </div>
+                    <div class="data-card" style="background:#fff">
+                        <h4 style="margin-top:0; color:#4a5568">Velocity Dağılımı</h4>
+                         <table class="styled-table">
+                            <tr><td>Geliştirme</td><td>${data.breakdown.gelistirme} SP</td></tr>
+                            <tr><td>Bakım / Destek</td><td>${data.breakdown.bakim} SP</td></tr>
+                            <tr><td>Diğer</td><td>${data.breakdown.diger} SP</td></tr>
+                        </table>
+                        <div style="margin-top:10px; height:8px; background:#edf2f7; border-radius:4px; overflow:hidden; display:flex">
+                            <div style="width:${(data.breakdown.gelistirme / data.velocity) * 100}%; background:#4299e1"></div>
+                            <div style="width:${(data.breakdown.bakim / data.velocity) * 100}%; background:#ed8936"></div>
+                            <div style="width:${(data.breakdown.diger / data.velocity) * 100}%; background:#cbd5e0"></div>
+                        </div>
+                    </div>
+                    <div class="data-card" style="background:#fff">
+                        <h4 style="margin-top:0; color:#4a5568">Performans Oranları</h4>
+                         <table class="styled-table">
+                            <tr><td>Done / Committed</td><td style="color:${parseFloat(data.doneCommittedRatio) > 80 ? 'green' : 'orange'}">${data.doneCommittedRatio}</td></tr>
+                            <tr><td>Emerged / Done</td><td>${data.emergedDoneRatio}</td></tr>
+                            <tr><td>Undone / Done</td><td>${data.undoneDoneRatio}</td></tr>
+                            <tr><td>Innovation Rate</td><td>${data.innovationRate}</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="section" style="border:none">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="section-title" style="display:flex; align-items:center; gap:10px;">
+                        Burndown Chart
+                        <span style="font-size:12px; font-weight:normal; background:#e2e8f0; color:#4a5568; padding:2px 8px; border-radius:12px; text-transform:none; letter-spacing:0;">
+                            Sprint Başlatma Tarihi: ${data.sprintActivatedDate || '---'}
+                        </span>
+                    </div>
+                    <button id="btn-audit-log" class="btn-secondary" style="padding: 8px 15px; font-size:13px; display:none;">
+                      Hesaplama Geçmişi (Log)
+                    </button>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="burndownChart"></canvas>
+                </div>
+                
+                <!-- Burndown Audit Modal (Hidden by default) -->
+                <div id="audit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+                  <div style="background:#fff; width:95%; max-width:1100px; max-height:85vh; border-radius:12px; display:flex; flex-direction:column; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+                    <div style="padding:20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                      <h3 style="margin:0; font-size:18px;">Burndown Log (SP Değişim Tarihçesi)</h3>
+                      <button id="close-audit-modal" style="background:none; border:none; font-size:24px; cursor:pointer; color:#718096; padding:0;">&times;</button>
+                    </div>
+                    <div id="audit-log-content" style="padding:20px; overflow-y:auto; font-family:monospace; font-size:13px; color:#2d3748; line-height:1.5; white-space:pre-wrap;">
+                      <!-- Logs injected here -->
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- Sprint Health & Scope Analysis -->
+            <div class="section">
+                <div class="grid grid-2" style="margin-bottom:20px; gap:20px;">
+                    <div class="data-card" style="background: linear-gradient(135deg, #fff 0%, #f7fafc 100%); border-left: 5px solid ${data.healthStatus.color}">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <span class="data-label" style="color: ${data.healthStatus.color}">Sprint Sağlığı</span>
+                                <div class="data-value" style="color: ${data.healthStatus.color}">${data.healthStatus.text}</div>
+                            </div>
+                            <div style="font-size:30px; font-weight:bold; color: ${data.healthStatus.color}; opacity:0.6">${data.healthStatus.score}/100</div>
+                        </div>
+                    </div>
+                    
+                     <div class="data-card" style="background: linear-gradient(135deg, #fff 0%, #f7fafc 100%); border-left: 5px solid #805ad5">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <span class="data-label" style="color: #805ad5">Kapsam Değişimi (Scope Creep)</span>
+                                <div class="data-value" style="color: #805ad5">${data.scopeCreepRate}</div>
+                            </div>
+                             <div style="font-size:30px; opacity:0.6">📈</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASK LIST AND MINI METRICS -->
+            <div class="section" id="sprint-task-section">
+                <div class="section-title">Sprint Task Listesi</div>
+                
+                <!-- Mini Metric Cards (Dynamic by Issue Type) -->
+                <div class="grid grid-4" id="issue-type-grid" style="gap: 15px; margin-bottom: 20px;">
+                    <!-- JS Injected Here -->
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:15px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0; align-items:center;">
+                    <div style="flex:2;">
+                        <input type="text" id="searchInput" placeholder="Search (Key, Summary)..." 
+                               style="width:94%; padding:10px; border-radius:6px; border:1px solid #cbd5e0; font-size:14px; outline:none;">
+                    </div>
+                    <div style="flex:1;">
+                        <select id="typeFilter" style="width:100%; padding:10px; border-radius:6px; border:1px solid #cbd5e0; font-size:14px; background:white; outline:none; cursor:pointer">
+                            <option value="All">Tüm Tipler</option>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <select id="resolverFilter" style="width:100%; padding:10px; border-radius:6px; border:1px solid #cbd5e0; font-size:14px; background:white; outline:none; cursor:pointer">
+                            <option value="All">Tüm Çözenler</option>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Summary</th>
+                            <th>Issue Type</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>SP</th>
+                            <th>Resolved By</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- WORKLOAD BREAKDOWN -->
+            <div class="section">
+                <div class="section-title">Efor Dağılımı (Kayıtlı Worklog)</div>
+                <div style="background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1); overflow:hidden;">
+                    <table class="task-table" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th style="text-align:center">Görev Sayısı</th>
+                                <th style="text-align:right">Harcanan Efor (Saat)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workloadTableBody">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ASSIGNEE BREAKDOWN -->
+            <div class="section" id="assignee-section">
+                <div class="section-title">Kişi Bazlı Dağılım (Story Points)</div>
+                
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <!-- Donut Chart -->
+                    <div class="chart-wrapper" style="height:350px; display:flex; justify-content:center;">
+                        <canvas id="assigneeChart"></canvas>
+                    </div>
+                
+                    <!-- Matrix Table -->
+                    <div style="overflow-x:auto;">
+                        <table class="task-table" id="matrix-table">
+                            <!-- Injected via JS -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    `;
+      document.getElementById("result").innerHTML = html;
+
+      // BUILD WORKLOAD TABLE HTML
+      let workloadHTML = '';
+      data.workloadReport.forEach(item => {
+        workloadHTML += `
+          <tr>
+            <td style="font-weight:600; color:#4a5568">${item.label}</td>
+            <td style="text-align:center">${item.count} Tane</td>
+            <td style="text-align:right; font-weight:bold; color:#2b6cb0">${item.timeSpentHours}h worklog girildi</td>
+          </tr>
+        `;
+      });
+      document.getElementById('workloadTableBody').innerHTML = workloadHTML;
+
+      // BUILD MATRIX TABLE HTML
+      let matrixHTML = `<thead><tr><th>Geliştirici</th>`;
+      data.matrixColumns.forEach(col => {
+        matrixHTML += `<th style="text-align:center">${col}</th>`;
+      });
+      matrixHTML += `<th style="text-align:center; font-weight:bold; background:#f7fafc">TOPLAM</th></tr></thead><tbody>`;
+
+      // Sort assignees by total SP desc for the table
+      // Actually server sent sorted labels in `assigneeBreakdown.labels` which are keys.
+      const assignees = data.assigneeBreakdown.labels;
+
+      assignees.forEach(name => {
+        const stats = data.assigneeMatrix[name];
+
+        // --- GAMIFICATION BADGES LOGIC ---
+        let badgesHTML = '';
+
+        // 1. Böcek Savar (Bug Squasher): En çok Bug çözen
+        let isBugSquasher = false;
+        if (data.issueTypeCounts['Bug'] || data.issueTypeCounts['Bugfix']) {
+          let maxBugs = 0;
+          let bugSquasherName = '';
+          assignees.forEach(a => {
+            let bugs = (data.assigneeMatrix[a]['Bug'] || 0) + (data.assigneeMatrix[a]['Bugfix'] || 0);
+            if (bugs > maxBugs) { maxBugs = bugs; bugSquasherName = a; }
+          });
+          if (bugSquasherName === name && maxBugs > 0) isBugSquasher = true;
+        }
+
+        // 2. Sprint Kahramanı (Sprint Hero): En çok SP yapan
+        let isHero = false;
+        let maxSP = 0;
+        let heroName = '';
+        assignees.forEach(a => {
+          if (data.assigneeMatrix[a].total > maxSP) { maxSP = data.assigneeMatrix[a].total; heroName = a; }
+        });
+        if (heroName === name && maxSP > 0) isHero = true;
+
+        // 3. Kalite Elçisi (Quality Ambassador): En çok Test yazan/yapan
+        let isQuality = false;
+        if (data.issueTypeCounts['Test']) {
+          let maxTests = 0;
+          let qualityName = '';
+          assignees.forEach(a => {
+            let tests = data.assigneeMatrix[a]['Test'] || 0;
+            if (tests > maxTests) { maxTests = tests; qualityName = a; }
+          });
+          if (qualityName === name && maxTests > 0) isQuality = true;
+        }
+
+        if (isHero) badgesHTML += '<span title="Sprint Kahramanı: En Yüksek SP" style="font-size:16px; margin-left:5px; cursor:help;">🏆</span>';
+        if (isBugSquasher) badgesHTML += '<span title="Böcek Savar: En Çok Bug Çözen" style="font-size:16px; margin-left:5px; cursor:help;">🐛</span>';
+        if (isQuality) badgesHTML += '<span title="Kalite Elçisi: En Çok Test Yazan" style="font-size:16px; margin-left:5px; cursor:help;">🛡️</span>';
+        // ------------------------------------
+
+        matrixHTML += `<tr><td style="font-weight:600">${name} ${badgesHTML}</td>`;
+        data.matrixColumns.forEach(col => {
+          const val = stats[col];
+          matrixHTML += `<td style="text-align:center; color:${val ? '#000' : '#ccc'}">${val || '-'}</td>`;
+        });
+        matrixHTML += `<td style="text-align:center; font-weight:bold; background:#f7fafc">${stats.total}</td></tr>`;
+      });
+      matrixHTML += `</tbody>`;
+      document.getElementById("matrix-table").innerHTML = matrixHTML;
+
+      // ... (Existing Key/Charts Logic) ...
+      const gridContainer = document.getElementById("issue-type-grid");
+      // ...
+      const typeColors = {
+        'Bug': { bg: 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)', text: '#c62828', icon: '🐞' },
+        'Bugfix': { bg: 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)', text: '#c62828', icon: '🐞' },
+        'NCR': { bg: 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)', text: '#c62828', icon: '🚨' },
+        'Story': { bg: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)', text: '#1565c0', icon: '📘' },
+        'Task': { bg: 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)', text: '#616161', icon: '📋' },
+        'Sub-task': { bg: 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)', text: '#616161', icon: '↳' },
+        'Epic': { bg: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)', text: '#6a1b9a', icon: '⚡' },
+        'Test': { bg: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)', text: '#ef6c00', icon: '🧪' },
+        'Default': { bg: 'linear-gradient(135deg, #fff 0%, #f0f0f0 100%)', text: '#333', icon: '📌' }
+      };
+
+      Object.entries(data.issueTypeCounts).forEach(([type, count]) => {
+        // ... (keep existing card loop)
+        let style = typeColors[type] || typeColors['Default'];
+        if (style === typeColors['Default']) {
+          if (type.toLowerCase().includes('test')) style = typeColors['Test'];
+          else if (type.toLowerCase().includes('ncr')) style = typeColors['NCR'];
+          else if (type.toLowerCase().includes('bug')) style = typeColors['Bug'];
+        }
+
+        const cardHTML = `
+            <div class="data-card" style="background: ${style.bg}; border:none; display:flex; align-items:center; justify-content:space-between; padding:15px 20px;">
+                <div>
+                    <span style="display:block; font-size:11px; font-weight:700; color:${style.text}; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8">${type}</span>
+                    <span style="font-size:22px; font-weight:800; color:${style.text};">${count}</span>
+                </div>
+                <div style="font-size:20px; opacity:0.6">${style.icon}</div>
+            </div>
+        `;
+        gridContainer.insertAdjacentHTML('beforeend', cardHTML);
+      });
+
+      // ... (Charts) ...
+      const ctx = document.getElementById('burndownChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 500);
+      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.5)');
+      gradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.chartData.labels,
+          datasets: [
+            {
+              label: 'Ideal Velocity',
+              data: data.chartData.ideal,
+              borderColor: '#276749', // Koyu yeşil
+              borderWidth: 2,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0,
+              tension: 0
+            },
+            {
+              label: 'PBL Remaining',
+              data: data.chartData.actual,
+              borderColor: '#667eea',
+              backgroundColor: gradient,
+              borderWidth: 3,
+              pointBackgroundColor: '#fff',
+              pointBorderColor: '#667eea',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              fill: true,
+              stepped: true,
+              spanGaps: true,
+              tension: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: (function () {
+            let pluginConfig = {
+              legend: { position: 'top' },
+              tooltip: {
+                callbacks: {
+                  title: function (context) {
+                    let titleStr = context[0].label || '';
+                    if (context[0].dataset.label === 'PBL Remaining') {
+                      titleStr += ` (Kalan: ${context[0].parsed.y} SP)`;
+                    }
+                    return titleStr;
+                  },
+                  label: function (context) {
+                    let tooltipData = data.chartData.tooltips ? data.chartData.tooltips[context.dataIndex] : null;
+
+                    if (context.dataset.label === 'PBL Remaining' && tooltipData && Array.isArray(tooltipData)) {
+                      return tooltipData;
+                    }
+
+                    return context.dataset.label + ': ' + context.parsed.y;
+                  }
+                }
+              }
+            };
+
+            // Hafta sonu alanlarını "box" annotation olarak ekle
+            if (data.chartData.isWeekend && data.chartData.isWeekend.length > 0) {
+              pluginConfig.annotation = { annotations: {} };
+              let isWeekendArr = data.chartData.isWeekend;
+
+              let boxIndex = 0;
+              let inWeekend = false;
+              let startIdx = 0;
+
+              for (let i = 0; i < isWeekendArr.length; i++) {
+                if (isWeekendArr[i] && !inWeekend) {
+                  // Hafta sonu baslangici
+                  inWeekend = true;
+                  startIdx = i;
+                } else if (!isWeekendArr[i] && inWeekend) {
+                  // Hafta sonu bitisi
+                  inWeekend = false;
+                  // StartIdx ile i arasina box ciz (i dahil olmadigindan xMax: i diyoruz)
+                  pluginConfig.annotation.annotations[`weekendBox${boxIndex}`] = {
+                    type: 'box',
+                    xMin: startIdx,
+                    xMax: i,
+                    backgroundColor: 'rgba(200, 200, 200, 0.25)', // Gri arkaplan
+                    borderWidth: 0,
+                    drawTime: 'beforeDraw'
+                  };
+                  boxIndex++;
+                }
+              }
+
+              // Eger data array'in sonu hafta sonu icindeyse acik kalan box'i kapat
+              if (inWeekend) {
+                pluginConfig.annotation.annotations[`weekendBox${boxIndex}`] = {
+                  type: 'box',
+                  xMin: startIdx,
+                  xMax: isWeekendArr.length - 1,
+                  backgroundColor: 'rgba(200, 200, 200, 0.25)',
+                  borderWidth: 0,
+                  drawTime: 'beforeDraw'
+                };
+              }
+            }
+
+            return pluginConfig;
+          })(),
+          scales: {
+            y: { grid: { color: '#f7fafc' }, beginAtZero: true },
+            x: {
+              grid: { display: false },
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                minRotation: 0,
+                callback: function (val, index) {
+                  const currentLabel = this.getLabelForValue(val);
+                  // currentLabel looks like "17 Şub 12:00"
+                  const datePart = currentLabel.split(' ').slice(0, 2).join(' ');
+
+                  if (index === 0) return datePart;
+
+                  const prevLabel = this.getLabelForValue(this.chart.data.labels[index - 1]);
+                  const prevDatePart = prevLabel ? prevLabel.split(' ').slice(0, 2).join(' ') : '';
+
+                  // Only show the label if the date (day/month) has changed
+                  if (datePart !== prevDatePart) {
+                    return datePart;
+                  }
+                  return '';
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Audit Log Display Logic
+      if (data.burndownAuditLog && data.burndownAuditLog.length > 0) {
+        document.getElementById('btn-audit-log').style.display = 'block';
+
+        let logTableHTML = `
+          <table class="task-table" style="font-family: 'Inter', sans-serif;">
+            <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
+              <tr>
+                <th style="padding:10px; text-align:left; border-bottom:2px solid #e2e8f0;">Tarih</th>
+                <th style="padding:10px; text-align:left; border-bottom:2px solid #e2e8f0;">Task</th>
+                <th style="padding:10px; text-align:left; border-bottom:2px solid #e2e8f0;">İşlem (Type)</th>
+                <th style="padding:10px; text-align:left; border-bottom:2px solid #e2e8f0;">Detay / Statü</th>
+                <th style="padding:10px; text-align:center; border-bottom:2px solid #e2e8f0;">SP Değişimi</th>
+                <th style="padding:10px; text-align:center; border-bottom:2px solid #e2e8f0; color:#2b6cb0;">Kalan Toplam SP</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        data.burndownAuditLog.forEach(log => {
+          let spColor = log.spEffect < 0 ? '#c53030' : (log.spEffect > 0 ? '#276749' : '#718096');
+          let spText = log.spEffect > 0 ? `+${log.spEffect}` : log.spEffect;
+          if (log.spEffect === 0) spText = '-';
+
+          let rowBg = 'transparent';
+          if (log.totalSP === 0) rowBg = '#f0fff4'; // Greenish when sprint closes
+          if (log.isPreSprint) rowBg = '#fefcbf'; // Yellowish for pre-sprint ignored events
+          if (log.isPunted) rowBg = '#fed7d7'; // Light red for punted issues
+
+          logTableHTML += `
+            <tr style="border-bottom:1px solid #edf2f7; background:${rowBg}">
+              <td style="padding:10px; color:#4a5568;">${log.date}</td>
+              <td style="padding:10px; font-weight:600;"><a href="${data.baseUrl}/browse/${log.key}" target="_blank" style="color:#3182ce; text-decoration:none;">${log.key}</a></td>
+              <td style="padding:10px;">
+                <span style="background:#edf2f7; padding:3px 8px; border-radius:4px; font-size:12px;">${log.type}</span>
+              </td>
+              <td style="padding:10px; color:#718096; font-size:12px;">${log.details}</td>
+              <td style="padding:10px; text-align:center; font-weight:bold; color:${spColor}">${spText}</td>
+              <td style="padding:10px; text-align:center; font-weight:800; font-size:14px; color:#2d3748; background:#f7fafc; border-left:1px dashed #e2e8f0;">${log.totalSP}</td>
+            </tr>
+          `;
+        });
+
+        logTableHTML += `</tbody></table>`;
+
+        let container = document.getElementById('audit-log-content');
+        container.style.padding = '0'; // Remove inner padding for flush table
+        container.innerHTML = logTableHTML;
+      }
+
+      document.getElementById('btn-audit-log').addEventListener('click', () => {
+        document.getElementById('audit-modal').style.display = 'flex';
+      });
+
+      document.getElementById('close-audit-modal').addEventListener('click', () => {
+        document.getElementById('audit-modal').style.display = 'none';
+      });
+
+      // Close modal on outside click
+      window.addEventListener('click', (e) => {
+        const modal = document.getElementById('audit-modal');
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+
+      // ASSIGNEE CHART
+      if (data.assigneeBreakdown) {
+        const ctxAssignee = document.getElementById('assigneeChart').getContext('2d');
+        new Chart(ctxAssignee, {
+          type: 'doughnut',
+          data: {
+            labels: data.assigneeBreakdown.labels,
+            datasets: [{
+              data: data.assigneeBreakdown.data,
+              backgroundColor: [
+                '#4299e1', '#48bb78', '#ed8936', '#9f7aea', '#f56565', '#38b2ac', '#ecc94b'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right' }
+            },
+            layout: { padding: 20 }
+          }
+        });
+      }
+
+      // --- FILTER LOGIC & TABLE RENDER ---
+      const issueList = data.issueList;
+      const tbody = document.getElementById("taskTableBody");
+      const typeSelect = document.getElementById("typeFilter");
+      const resolverSelect = document.getElementById("resolverFilter");
+      const searchInput = document.getElementById("searchInput");
+
+      if (tbody && typeSelect && resolverSelect && searchInput) {
+
+        // Explain Modal Logic
+        window.showExplanation = (key) => {
+          const issue = data.issueList.find(i => i.key === key);
+          if (issue && issue.explanation) {
+            document.getElementById('explanationContent').innerText = issue.explanation;
+            document.getElementById('explanationModal').style.display = 'flex';
+          }
+        };
+
+        window.closeExplanation = () => {
+          document.getElementById('explanationModal').style.display = 'none';
+        };
+
+        // Close on outside click
+        window.onclick = function (event) {
+          const modal = document.getElementById('explanationModal');
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+        // 1. Populate Dropdowns
+        const uniqueTypes = [...new Set(issueList.map(i => i.issuetype))].sort();
+        const uniqueResolvers = [...new Set(issueList.map(i => i.assignee))].sort();
+
+        uniqueTypes.forEach(t => {
+          if (!t) return;
+          const option = document.createElement("option");
+          option.value = t;
+          option.innerText = t;
+          typeSelect.appendChild(option);
+        });
+
+        uniqueResolvers.forEach(r => {
+          if (!r) return;
+          const option = document.createElement("option");
+          option.value = r;
+          option.innerText = r;
+          resolverSelect.appendChild(option);
+        });
+
+        // 2. Render Table Function
+        const renderTable = (list) => {
+          if (list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#999;">Kriterlere uygun kayıt bulunamadı.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = list.map(issue => `
+                  <tr class="${issue.isEmerged ? 'emerged-row' : ''} ${issue.isPunted ? 'punted-row' : ''}" style="${issue.isPunted ? 'background-color:#fff5f5; border-left:4px solid #f56565;' : ''}">
+                       <td style="font-weight:700">
+                          <a href="${data.baseUrl}/browse/${issue.key}" target="_blank" style="text-decoration:none; color:#3182ce;">
+                              ${issue.key}
+                          </a>
+                      </td>
+                      <td>
+                          ${issue.summary}
+                          ${issue.explanation ? `<span onclick="window.showExplanation('${issue.key}')" style="cursor:pointer; margin-left:5px; color:#3182ce; font-size:1.1em;" title="Açıklamayı Oku">ℹ️</span>` : ''}
+                      </td>
+                      <td style="white-space:nowrap;">
+                          ${issue.issuetypeIcon ? `<img src="${issue.issuetypeIcon}" style="width:16px; vertical-align:middle; margin-right:4px;">` : ''} 
+                          ${issue.issuetype}
+                      </td>
+                      <td style="white-space:nowrap;">
+                          ${issue.priorityIcon ? `<img src="${issue.priorityIcon}" style="width:16px; vertical-align:middle; margin-right:4px;">` : ''} 
+                          ${issue.priority}
+                      </td>
+                      <td>
+                          <span class="status-badge ${issue.status === 'Done' || issue.status === 'Resolved' ? 'status-done' : 'status-todo'}">
+                              ${issue.status}
+                          </span>
+                          ${issue.isPunted ? `<span style="font-size:10px; background:#f56565; color:white; padding:2px 4px; border-radius:4px; margin-left:4px;">Removed</span>` : ''}
+                      </td>
+                      <td style="text-align:center; font-weight:bold;">${issue.sp}</td>
+                      <td style="font-size:12px; color:#555;">${issue.assignee}</td>
+                  </tr>
+              `).join('');
+        };
+
+        // 3. Filter Function
+        const filterTasks = () => {
+          const keyword = searchInput.value.toLowerCase();
+          const selectedType = typeSelect.value;
+          const selectedResolver = resolverSelect.value;
+
+          const filtered = issueList.filter(issue => {
+            const summary = issue.summary ? issue.summary.toLowerCase() : "";
+            const key = issue.key ? issue.key.toLowerCase() : "";
+
+            const matchesKeyword = (summary.includes(keyword) || key.includes(keyword));
+            const matchesType = selectedType === "All" || issue.issuetype === selectedType;
+            const matchesResolver = selectedResolver === "All" || issue.assignee === selectedResolver;
+
+            return matchesKeyword && matchesType && matchesResolver;
+          });
+
+          renderTable(filtered);
+        };
+
+        // 4. Attach Listeners
+        searchInput.addEventListener("input", filterTasks);
+        typeSelect.addEventListener("change", filterTasks);
+        resolverSelect.addEventListener("change", filterTasks);
+
+        // Initial Render
+        renderTable(issueList);
+      }
+
+      document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+  <!-- Explanation Modal -->
+  <div id="explanationModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div
+      style="background:white; padding:25px; border-radius:12px; max-width:500px; width:90%; position:relative; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <span onclick="window.closeExplanation()"
+        style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:24px; color:#a0aec0;">&times;</span>
+      <h3
+        style="margin-top:0; margin-bottom:15px; color:#2d3748; font-size:18px; font-weight:700; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+        📝 Açıklama
+      </h3>
+      <div id="explanationContent"
+        style="color:#4a5568; line-height:1.6; font-size:14px; max-height:60vh; overflow-y:auto; white-space: pre-wrap;">
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

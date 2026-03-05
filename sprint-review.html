@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sprint Review Checklist</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <link rel="stylesheet" href="css/daily.css">
+        <style>
+                /* Re-using some of daily.css structure, but tailored for standalone list view */
+                .page-wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        width: 100%;
+                        max-width: 1400px;
+                        margin: 0 auto;
+                        padding: 40px 20px;
+                }
+
+                .header-container {
+                        text-align: center;
+                        margin-bottom: 30px;
+                }
+
+                .header-container h1 {
+                        font-size: 2.5rem;
+                        font-weight: 700;
+                        margin-bottom: 5px;
+                        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+                        -webkit-background-clip: text;
+                        background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                }
+
+                .header-container p {
+                        color: var(--text-muted);
+                        font-size: 1.1rem;
+                }
+
+                /* Override daily.css checklist specific sizes for full page */
+                .checklist-container.full-width {
+                        max-width: 100%;
+                        height: auto;
+                        max-height: 80vh;
+                }
+        </style>
+</head>
+
+<body>
+
+        <!-- Back Button -->
+        <a href="index.html" class="home-btn" title="Ana Sayfaya Dön">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+        </a>
+
+        <div class="page-wrapper">
+                <div class="header-container">
+                        <h1>Sprint Review</h1>
+                        <p>Başarıları kutla, geri bildirim al, yönünü belirle.</p>
+                </div>
+
+                <div class="layout-wrapper">
+                        <!-- Agenda Panel (Interactive) -->
+                        <div class="checklist-container" id="agendaPanel" style="flex: 1; max-width: 500px;">
+                                <h2>Gündemler</h2>
+                                <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                        <input type="text" id="agendaInput" placeholder="Toplantıda ne konuşacağız?"
+                                                style="flex: 1; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border); font-family: inherit; font-size: 1rem; outline: none;">
+                                        <button id="addAgendaBtn"
+                                                style="background: var(--primary); color: white; border: none; border-radius: 10px; padding: 0 20px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+                                                Ekle
+                                        </button>
+                                </div>
+
+                                <div class="check-list-items" id="agendaList">
+                                        <!-- Dynamic Agenda Items will appear here -->
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Geçen
+                                                        Sprintin Özeti</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Tamamlanan İşlerin Demosu</span></label>
+                                </div>
+                        </div>
+
+                        <!-- Existing Checklist Panel -->
+                        <div class="checklist-container" style="flex: 1; max-width: 600px;">
+                                <h2>Sprint Review Checklist</h2>
+
+                                <div class="checklist-section">
+                                        <h3>🎯 Amaç</h3>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Sprint’te neyin başarıldığı
+                                                        ve ortaya çıkan çıktılar birlikte incelendi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Bir
+                                                        sonraki adımlar için iş
+                                                        listesi adapte edildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Toplantı sunumdan ziyade
+                                                        etkileşimli bir çalışma seansı olarak ilerledi
+                                                        mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Süre
+                                                        120 dakikayı aşmadı mı?
+                                                        (2 haftalık sprint için önerilen max süre)</span></label>
+                                </div>
+
+                                <div class="checklist-section">
+                                        <h3>📍 Şeffaflık & İlerleme</h3>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Ürün
+                                                        yol haritası paylaşıldı
+                                                        mı?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Epic
+                                                        seviyede ilerleme gözden
+                                                        geçirildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Sprint Hedefi paylaşıldı
+                                                        mı?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Sprint Hedefine ulaşılıp
+                                                        ulaşılmadığı değerlendirildi mi?</span></label>
+                                </div>
+
+                                <div class="checklist-section">
+                                        <h3>🧪 Çıktı & Değer</h3>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Bitmiş işler birlikte
+                                                        incelendi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Çalışan ürün artışı (working
+                                                        increment) demo edildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Üretilen değerin etkisi
+                                                        değerlendirildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Ürün
+                                                        hedefine ilişkin gelişim
+                                                        gözden geçirildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">İlgili metrikler paylaşıldı
+                                                        mı?</span></label>
+                                </div>
+
+                                <div class="checklist-section">
+                                        <h3>🤝 Katılım & Geri Bildirim</h3>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Paydaşlar toplantıya katıldı
+                                                        mı?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Geri
+                                                        bildirim alındı
+                                                        mı?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Gelen
+                                                        geri bildirimler
+                                                        netleştirildi mi?</span></label>
+                                </div>
+
+                                <div class="checklist-section">
+                                        <h3>🔄 Gelecek Odaklılık</h3>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Önümüzdeki birkaç olası
+                                                        Sprint Hedefi değerlendirildi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span
+                                                        class="check-text">Gerekliyse Ürün İş Listesi
+                                                        (Product Backlog) güncellendi mi?</span></label>
+                                        <label class="check-item"><input type="checkbox"> <span class="check-text">Yeni
+                                                        fırsatlar, riskler veya
+                                                        yön değişiklikleri konuşuldu mu?</span></label>
+                                </div>
+
+                        </div>
+                </div>
+        </div>
+
+        <!-- JS for interactive functionality -->
+        <script src="js/sprint-review.js"></script>
+</body>
+
+</html>

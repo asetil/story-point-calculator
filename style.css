@@ -79,9 +79,10 @@ body {
 }
 
 .container {
-    width: 100%;
-    max-width: 1200px;
-    /* Even wider to accommodate wider result panel */
+    width: 95%;
+    /* Geniş ekran kullanımı */
+    max-width: 1800px;
+    margin: 0 auto;
     z-index: 1;
 }
 
@@ -104,8 +105,13 @@ header p {
 /* --- MAIN LAYOUT --- */
 .main-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* EQUAL COLUMNS to widen result area */
+    grid-template-columns: 1fr 1fr 1fr;
+    /* 3 Eşit Kolon */
+    gap: 30px;
+    align-items: start;
+}
+
+.content-panel {
     gap: 30px;
     align-items: start;
 }
@@ -121,8 +127,12 @@ header p {
     top: 20px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .content-panel {
         grid-template-columns: 1fr;
     }
 
@@ -160,6 +170,112 @@ header p {
     font-weight: 600;
     font-size: 0.95rem;
 }
+
+/* --- CHECKLIST STYLES --- */
+.checklist-section h2 {
+    margin-bottom: 25px;
+}
+
+.checklist-category {
+    margin-bottom: 25px;
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.checklist-category h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+}
+
+/* Custom Checkbox Container */
+.check-container {
+    display: flex;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    user-select: none;
+    line-height: 1.4;
+    transition: color 0.2s;
+}
+
+.check-container:last-child {
+    margin-bottom: 0;
+}
+
+.check-container:hover {
+    color: var(--primary);
+}
+
+/* Hide the browser's default checkbox */
+.check-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: var(--input-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* On mouse-over, add a grey background color */
+.check-container:hover input~.checkmark {
+    background-color: #e2e8f0;
+    border-color: var(--primary-hover);
+}
+
+/* When the checkbox is checked, add a blue background */
+.check-container input:checked~.checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+/* ------------------------ */
 
 .button-group {
     display: flex;

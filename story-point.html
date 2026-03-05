@@ -22,162 +22,232 @@
     <div class="background-blobs"></div>
     <div class="container">
         <header>
-            <h1>Story Point Hesaplayıcı</h1>
-            <p>Sprint için karmaşıklık, risk ve hacim tahmini.</p>
+            <h1>Sprint Planlama</h1>
+            <p>Sprint planlama için ihtiyaç duydunuz araçlar</p>
         </header>
 
         <main class="main-layout">
             <!-- LEFT PANEL -->
             <div class="left-panel">
+                <!-- SPRINT PLANNING CHECKLIST -->
+                <div class="card checklist-section">
+                    <h2>Sprint Planning Checklist</h2>
+                    <div class="checklist-category">
+                        <h3>🎯 Amaç & Hedef</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Sprint’in
+                            amacı (Sprint Goal) net olarak belirlendi mi?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Bu
+                            sprintin neden değerli olduğu takım tarafından anlaşıldı mı?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Ürün yol
+                            haritası paylaşıldı mı?</label>
+                    </div>
 
-                <!-- TOP LEFT: FACTORS (Hesaplama Faktörleri) -->
-                <div class="card factors-section">
-                    <h2 style="color: var(--text-muted); font-size: 1rem;">Hesaplama Faktörleri (Otomatik/Manuel)</h2>
+                    <div class="checklist-category">
+                        <h3>📦 Kapsam (Ne Yapılacak?)</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Sprint’e
+                            alınacak backlog maddeleri netleştirildi mi?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Backlog
+                            maddeleri yeterince detaylı mı?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Kabul
+                            kriterleri açık ve anlaşılır mı?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Seçilen
+                            işlerin sprint içinde tamamlanabilir olduğu konusunda takım hemfikir mi?</label>
+                    </div>
 
-                    <div class="factors">
-                        <div class="factor-group">
-                            <label>Hacim (Volume)</label>
-                            <div class="button-group" id="volumeGroup">
-                                <button type="button" class="selection-btn" data-value="1"
-                                    data-desc="Çok küçük, metin veya renk değişimi.">
-                                    <span class="btn-title">XS</span>
-                                    <span class="btn-desc">Minik</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="2"
-                                    data-desc="Tek bir form, liste veya basit ekran.">
-                                    <span class="btn-title">S</span>
-                                    <span class="btn-desc">Küçük</span>
-                                </button>
-                                <button type="button" class="selection-btn active" data-value="3"
-                                    data-desc="Standart bir modül veya akış. Birkaç süreci/ekranı etkileyen geliştirme.">
-                                    <span class="btn-title">M</span>
-                                    <span class="btn-desc">Orta</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="5"
-                                    data-desc="Birkaç modül veya birçok ekranı etkileyen geliştirme.">
-                                    <span class="btn-title">L</span>
-                                    <span class="btn-desc">Büyük</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="8"
-                                    data-desc="Sistemin genelini etkileyen yapısal değişiklik.">
-                                    <span class="btn-title">XL</span>
-                                    <span class="btn-desc">Devasa</span>
-                                </button>
-                            </div>
-                            <p class="factor-description">Standart bir modül veya akış.</p>
-                        </div>
+                    <div class="checklist-category">
+                        <h3>🔧 Plan (Nasıl Yapılacak?)</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> İşler
+                            task’lere bölündü mü?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Takım her
+                            işin nasıl yapılacağını konuştu mu?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Oyun
+                            planı çıkarıldı mı?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span>
+                            Bağımlılıklar belirlendi ve etiketlendi mi?</label>
+                    </div>
 
-                        <div class="factor-group">
-                            <label>Karmaşıklık (Complexity)</label>
-                            <div class="button-group" id="complexityGroup">
-                                <button type="button" class="selection-btn" data-value="1"
-                                    data-desc="Her şey standart, mantık dümdüz.">
-                                    <span class="btn-title">Çok Düşük</span>
-                                    <span class="btn-desc">Basit</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="2"
-                                    data-desc="Standart CRUD işlemleri, bilinen paternler.">
-                                    <span class="btn-title">Düşük</span>
-                                    <span class="btn-desc">Standart</span>
-                                </button>
-                                <button type="button" class="selection-btn active" data-value="3"
-                                    data-desc="Bazı özel iş kuralları veya bilinmeyen noktalar var.">
-                                    <span class="btn-title">Orta</span>
-                                    <span class="btn-desc">Bilinmeyenler</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="5"
-                                    data-desc="Karmaşık algoritmalar veya performans gereksinimleri.">
-                                    <span class="btn-title">Yüksek</span>
-                                    <span class="btn-desc">Karmaşık</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="8"
-                                    data-desc="Ar-Ge gerektiren, daha önce çözülmemiş problemler.">
-                                    <span class="btn-title">Çok Yüksek</span>
-                                    <span class="btn-desc">Araştırma</span>
-                                </button>
-                            </div>
-                            <p class="factor-description">Bazı özel iş kuralları veya bilinmeyen noktalar var.</p>
-                        </div>
+                    <div class="checklist-category">
+                        <h3>👥 Sahiplik & Dağılım</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> İş
+                            maddelerinin sahipleri belirlendi mi?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Adil iş
+                            yükü dağılımı gözetildi mi?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> İşler
+                            takım tarafından birlikte eforlandı mı?</label>
+                    </div>
 
-                        <div class="factor-group">
-                            <label>Risk (Risk)</label>
-                            <div class="button-group" id="riskGroup">
-                                <button type="button" class="selection-btn" data-value="1"
-                                    data-desc="Hata yapma ihtimali neredeyse yok.">
-                                    <span class="btn-title">Çok Düşük</span>
-                                    <span class="btn-desc">Güvenli</span>
-                                </button>
-                                <button type="button" class="selection-btn active" data-value="2"
-                                    data-desc="Standart riskler, kolayca yönetilebilir.">
-                                    <span class="btn-title">Düşük</span>
-                                    <span class="btn-desc">Risk Yok</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="3"
-                                    data-desc="Dış bağımlılıklar veya veri tutarlılığı riski.">
-                                    <span class="btn-title">Orta</span>
-                                    <span class="btn-desc">Bağımlılıklar</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="5"
-                                    data-desc="Kritik veri kaybı riski veya kararsız gereksinimler.">
-                                    <span class="btn-title">Yüksek</span>
-                                    <span class="btn-desc">Kritik</span>
-                                </button>
-                                <button type="button" class="selection-btn" data-value="8"
-                                    data-desc="Projenin başarısını etkileyebilecek büyük riskler.">
-                                    <span class="btn-title">Çok Yüksek</span>
-                                    <span class="btn-desc">Belirsiz</span>
-                                </button>
-                            </div>
-                            <p class="factor-description">Standart riskler, kolayca yönetilebilir.</p>
-                        </div>
+                    <div class="checklist-category">
+                        <h3>📊 Kapasite & Gerçekçilik</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Geçmiş
+                            sprint hızı (velocity) kontrol edildi mi?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Takım
+                            kapasitesi (izinler, resmi tatiller vb.) dikkate alındı mı?</label>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Planlanan
+                            iş, mevcut kapasite ile uyumlu mu?</label>
+                    </div>
+
+                    <div class="checklist-category">
+                        <h3>⏱️ Zaman Kutusu</h3>
+                        <label class="check-container"><input type="checkbox"> <span class="checkmark"></span> Sprint
+                            Planning süresi 4 saati aşmadı mı? (2 haftalık sprint için)</label>
                     </div>
                 </div>
+            </div>
 
-                <!-- BOTTOM LEFT: INPUTS (Proje Bileşenleri) + BUTTON -->
-                <div class="card input-section">
-                    <h2>Proje Bileşenleri (Girdiler)</h2>
+            <!-- CONTENT PANEL (2fr ratio) -->
+            <div class="content-panel">
+                <!-- MIDDLE PANEL (Factors & Inputs) -->
+                <div class="middle-panel" style="display: flex; flex-direction: column; gap: 30px;">
+                    <!-- TOP MIDDLE: FACTORS (Hesaplama Faktörleri) -->
+                    <div class="card factors-section">
+                        <h2 style="color: var(--text-muted); font-size: 1rem;">Story Point Hesaplayıcı
+                        </h2>
 
-                    <div class="factors">
-                        <!-- FRONTEND -->
-                        <div class="factor-group">
-                            <label>Frontend (Arayüz)</label>
-                            <div class="button-group" id="frontendGroup">
-                                <button type="button" class="selection-btn" data-value="1">Yok</button>
-                                <button type="button" class="selection-btn" data-value="2">Basit</button>
-                                <button type="button" class="selection-btn" data-value="3">Orta</button>
-                                <button type="button" class="selection-btn" data-value="4">Zor</button>
-                                <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                        <div class="factors">
+                            <div class="factor-group">
+                                <label>Hacim (Volume)</label>
+                                <div class="button-group" id="volumeGroup">
+                                    <button type="button" class="selection-btn" data-value="1"
+                                        data-desc="Çok küçük, metin veya renk değişimi.">
+                                        <span class="btn-title">XS</span>
+                                        <span class="btn-desc">Minik</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="2"
+                                        data-desc="Tek bir form, liste veya basit ekran.">
+                                        <span class="btn-title">S</span>
+                                        <span class="btn-desc">Küçük</span>
+                                    </button>
+                                    <button type="button" class="selection-btn active" data-value="3"
+                                        data-desc="Standart bir modül veya akış. Birkaç süreci/ekranı etkileyen geliştirme.">
+                                        <span class="btn-title">M</span>
+                                        <span class="btn-desc">Orta</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="5"
+                                        data-desc="Birkaç modül veya birçok ekranı etkileyen geliştirme.">
+                                        <span class="btn-title">L</span>
+                                        <span class="btn-desc">Büyük</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="8"
+                                        data-desc="Sistemin genelini etkileyen yapısal değişiklik.">
+                                        <span class="btn-title">XL</span>
+                                        <span class="btn-desc">Devasa</span>
+                                    </button>
+                                </div>
+                                <p class="factor-description">Standart bir modül veya akış.</p>
                             </div>
-                            <p class="factor-description">Basit ekranlar veya revizyonlar.</p>
-                        </div>
 
-                        <!-- BACKEND -->
-                        <div class="factor-group">
-                            <label>Backend (Servis/DB)</label>
-                            <div class="button-group" id="backendGroup">
-                                <button type="button" class="selection-btn" data-value="1">Yok</button>
-                                <button type="button" class="selection-btn" data-value="2">Basit</button>
-                                <button type="button" class="selection-btn" data-value="3">Orta</button>
-                                <button type="button" class="selection-btn" data-value="4">Zor</button>
-                                <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                            <div class="factor-group">
+                                <label>Karmaşıklık (Complexity)</label>
+                                <div class="button-group" id="complexityGroup">
+                                    <button type="button" class="selection-btn" data-value="1"
+                                        data-desc="Her şey standart, mantık dümdüz.">
+                                        <span class="btn-title">Çok Düşük</span>
+                                        <span class="btn-desc">Basit</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="2"
+                                        data-desc="Standart CRUD işlemleri, bilinen paternler.">
+                                        <span class="btn-title">Düşük</span>
+                                        <span class="btn-desc">Standart</span>
+                                    </button>
+                                    <button type="button" class="selection-btn active" data-value="3"
+                                        data-desc="Bazı özel iş kuralları veya bilinmeyen noktalar var.">
+                                        <span class="btn-title">Orta</span>
+                                        <span class="btn-desc">Bilinmeyenler</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="5"
+                                        data-desc="Karmaşık algoritmalar vari performans gereksinimleri.">
+                                        <span class="btn-title">Yüksek</span>
+                                        <span class="btn-desc">Karmaşık</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="8"
+                                        data-desc="Ar-Ge gerektiren, daha önce çözülmemiş problemler.">
+                                        <span class="btn-title">Çok Yüksek</span>
+                                        <span class="btn-desc">Araştırma</span>
+                                    </button>
+                                </div>
+                                <p class="factor-description">Bazı özel iş kuralları veya bilinmeyen noktalar var.</p>
                             </div>
-                            <p class="factor-description">Backend yok veya mock data.</p>
-                        </div>
 
-                        <!-- INTEGRATION -->
-                        <div class="factor-group">
-                            <label>Entegrasyon / Risk</label>
-                            <div class="button-group" id="integrationGroup">
-                                <button type="button" class="selection-btn" data-value="1">Yok</button>
-                                <button type="button" class="selection-btn" data-value="2">Basit</button>
-                                <button type="button" class="selection-btn" data-value="3">Orta</button>
-                                <button type="button" class="selection-btn" data-value="4">Zor</button>
-                                <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                            <div class="factor-group">
+                                <label>Risk (Risk)</label>
+                                <div class="button-group" id="riskGroup">
+                                    <button type="button" class="selection-btn" data-value="1"
+                                        data-desc="Hata yapma ihtimali neredeyse yok.">
+                                        <span class="btn-title">Çok Düşük</span>
+                                        <span class="btn-desc">Güvenli</span>
+                                    </button>
+                                    <button type="button" class="selection-btn active" data-value="2"
+                                        data-desc="Standart riskler, kolayca yönetilebilir.">
+                                        <span class="btn-title">Düşük</span>
+                                        <span class="btn-desc">Risk Yok</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="3"
+                                        data-desc="Dış bağımlılıklar veya veri tutarlılığı riski.">
+                                        <span class="btn-title">Orta</span>
+                                        <span class="btn-desc">Bağımlılıklar</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="5"
+                                        data-desc="Kritik veri kaybı riski veya kararsız gereksinimler.">
+                                        <span class="btn-title">Yüksek</span>
+                                        <span class="btn-desc">Kritik</span>
+                                    </button>
+                                    <button type="button" class="selection-btn" data-value="8"
+                                        data-desc="Projenin başarısını etkileyebilecek büyük riskler.">
+                                        <span class="btn-title">Çok Yüksek</span>
+                                        <span class="btn-desc">Belirsiz</span>
+                                    </button>
+                                </div>
+                                <p class="factor-description">Standart riskler, kolayca yönetilebilir.</p>
                             </div>
-                            <p class="factor-description">Dış bağımlılık yok.</p>
                         </div>
                     </div>
 
+                    <!-- MIDDLE BOTTOM: INPUTS (Proje Bileşenleri) + BUTTON -->
+                    <div class="card input-section">
+                        <h2>Proje Bileşenleri (Girdiler)</h2>
+
+                        <div class="factors">
+                            <!-- FRONTEND -->
+                            <div class="factor-group">
+                                <label>Frontend (Arayüz)</label>
+                                <div class="button-group" id="frontendGroup">
+                                    <button type="button" class="selection-btn" data-value="1">Yok</button>
+                                    <button type="button" class="selection-btn" data-value="2">Basit</button>
+                                    <button type="button" class="selection-btn" data-value="3">Orta</button>
+                                    <button type="button" class="selection-btn" data-value="4">Zor</button>
+                                    <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                                </div>
+                                <p class="factor-description">Basit ekranlar veya revizyonlar.</p>
+                            </div>
+
+                            <!-- BACKEND -->
+                            <div class="factor-group">
+                                <label>Backend (Servis/DB)</label>
+                                <div class="button-group" id="backendGroup">
+                                    <button type="button" class="selection-btn" data-value="1">Yok</button>
+                                    <button type="button" class="selection-btn" data-value="2">Basit</button>
+                                    <button type="button" class="selection-btn" data-value="3">Orta</button>
+                                    <button type="button" class="selection-btn" data-value="4">Zor</button>
+                                    <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                                </div>
+                                <p class="factor-description">Backend yok veya mock data.</p>
+                            </div>
+
+                            <!-- INTEGRATION -->
+                            <div class="factor-group">
+                                <label>Entegrasyon / Risk</label>
+                                <div class="button-group" id="integrationGroup">
+                                    <button type="button" class="selection-btn" data-value="1">Yok</button>
+                                    <button type="button" class="selection-btn" data-value="2">Basit</button>
+                                    <button type="button" class="selection-btn" data-value="3">Orta</button>
+                                    <button type="button" class="selection-btn" data-value="4">Zor</button>
+                                    <button type="button" class="selection-btn" data-value="5">Çok Zor</button>
+                                </div>
+                                <p class="factor-description">Dış bağımlılık yok.</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -273,75 +343,75 @@
                 </div>
                 <p style="text-align: center; margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">@ osokuoglu</p>
             </div>
-        </main>
+    </div>
+    </main>
 
-        <!-- ASSIGNMENT MODAL -->
-        <div id="assignModal" class="modal-overlay" style="display: none;">
-            <div class="modal-content">
-                <h3>Görev Atama</h3>
-                <div class="form-group">
-                    <label>İş Başlığı</label>
-                    <input type="text" id="taskTitleInput" placeholder="Örn: Login Ekranı Tasarımı" />
-                </div>
+    <!-- ASSIGNMENT MODAL -->
+    <div id="assignModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>Görev Atama</h3>
+            <div class="form-group">
+                <label>İş Başlığı</label>
+                <input type="text" id="taskTitleInput" placeholder="Örn: Login Ekranı Tasarımı" />
+            </div>
 
-                <div class="form-group">
-                    <label>Atama Yöntemi</label>
-                    <div class="radio-group" style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                            <input type="radio" name="assignMethod" value="auto" checked> Otomatik (En Uygun)
-                        </label>
-                        <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                            <input type="radio" name="assignMethod" value="random"> Rastgele (Şans)
-                        </label>
-                        <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                            <input type="radio" name="assignMethod" value="manual"> Manuel Seçim
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group" id="manualSelectGroup" style="display: none;">
-                    <label>Kişi Seçin</label>
-                    <select id="assigneeSelect"
-                        style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
-                        <!-- Options will be populated by JS -->
-                    </select>
-                </div>
-
-                <div class="modal-actions"
-                    style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                    <button id="cancelAssignBtn" style="background: #f1f5f9; color: #475569;">İptal</button>
-                    <button id="confirmAssignBtn">Onayla & Ata</button>
+            <div class="form-group">
+                <label>Atama Yöntemi</label>
+                <div class="radio-group" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="assignMethod" value="auto" checked> Otomatik (En Uygun)
+                    </label>
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="assignMethod" value="random"> Rastgele (Şans)
+                    </label>
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="assignMethod" value="manual"> Manuel Seçim
+                    </label>
                 </div>
             </div>
-        </div>
 
-        <!-- TEAM DASHBOARD -->
-        <!-- TEAM DASHBOARD MODAL -->
-        <div id="dashboardModal" class="modal-overlay" style="display: none;">
-            <div class="modal-content" style="max-width: 900px; width: 95%;">
-                <div class="dashboard-header"
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
-                    <h2 style="margin: 0; font-size: 1.5rem; color: var(--primary-color);">Atama Durumu</h2>
-                    <div style="display: flex; gap: 10px;">
-                        <button id="resetTeamBtn"
-                            style="font-size: 0.8rem; padding: 6px 12px; background: #fee2e2; color: #b91c1c; border: none; border-radius: 6px; cursor: pointer;">Sıfırla</button>
-                        <button id="closeDashboardBtn"
-                            style="font-size: 1.2rem; background: none; border: none; cursor: pointer; color: #64748b;">✕</button>
-                    </div>
-                </div>
+            <div class="form-group" id="manualSelectGroup" style="display: none;">
+                <label>Kişi Seçin</label>
+                <select id="assigneeSelect"
+                    style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
 
-                <!-- Add New Member Section -->
-                <div class="add-member-section" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <input type="text" id="newMemberName" placeholder="Yeni Kişi Adı"
-                        style="flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit;">
-                    <button id="addMemberBtn"
-                        style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Ekle</button>
-                </div>
-                <div class="team-grid" id="teamGrid" style="max-height: 60vh; overflow-y: auto; padding: 5px;">
-                    <!-- Team cards will be populated by JS -->
-                </div>
+            <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button id="cancelAssignBtn" style="background: #f1f5f9; color: #475569;">İptal</button>
+                <button id="confirmAssignBtn">Onayla & Ata</button>
             </div>
         </div>
+    </div>
+
+    <!-- TEAM DASHBOARD -->
+    <!-- TEAM DASHBOARD MODAL -->
+    <div id="dashboardModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 900px; width: 95%;">
+            <div class="dashboard-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
+                <h2 style="margin: 0; font-size: 1.5rem; color: var(--primary-color);">Atama Durumu</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button id="resetTeamBtn"
+                        style="font-size: 0.8rem; padding: 6px 12px; background: #fee2e2; color: #b91c1c; border: none; border-radius: 6px; cursor: pointer;">Sıfırla</button>
+                    <button id="closeDashboardBtn"
+                        style="font-size: 1.2rem; background: none; border: none; cursor: pointer; color: #64748b;">✕</button>
+                </div>
+            </div>
+
+            <!-- Add New Member Section -->
+            <div class="add-member-section" style="margin-bottom: 20px; display: flex; gap: 10px;">
+                <input type="text" id="newMemberName" placeholder="Yeni Kişi Adı"
+                    style="flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit;">
+                <button id="addMemberBtn"
+                    style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Ekle</button>
+            </div>
+            <div class="team-grid" id="teamGrid" style="max-height: 60vh; overflow-y: auto; padding: 5px;">
+                <!-- Team cards will be populated by JS -->
+            </div>
+        </div>
+    </div>
     </div>
     <script src="script.js"></script>
 </body>
